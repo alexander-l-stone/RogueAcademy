@@ -11,7 +11,7 @@ class Area:
         self.wall = wall
         self.floor = floor
         self.objdict = {}
-        self.map = numpy.array([[[False for x in range(self.x_length)] for y in range(self.y_length)] for z in range(self.z_length)])
+        self.map = numpy.array([[[True for x in range(self.x_length)] for y in range(self.y_length)] for z in range(self.z_length)])
     
     def draw(self, playerx, playery, playerz, screen_width, screen_height):
         print(self.map)
