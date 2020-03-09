@@ -2,8 +2,6 @@ from typing import List
 
 class GrammarRule:
 
-    def __init__(self, *components):
-        self.components = {}
-
-        self.parent:GrammarRule = None # rule
-        self.selections:List[List] = [] # list rule or typestring
+    def __init__(self, parent:GrammarRule=None, selections:List[List]=[]):
+        self.parent:GrammarRule = parent # rule
+        self.selections:List[List] = selections # list rule or typestring

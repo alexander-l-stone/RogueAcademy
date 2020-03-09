@@ -3,17 +3,15 @@ import random
 
 class Grammar:
 
-    def __init__(self, *components):
-        self.components = {}
-
+    def __init__(self, rule:GrammarRule=None):
         self.typemap = {} # string :: List[object] 
-        self.root = None # rule
+        self.root = rule # rule
 
     def generate(self, rule:GrammarRule=None):
         if rule == None:
             rule = self.root
 
-        arr = [rule]
+        arr:List = [rule]
 
         for i,r in enumerate(arr):
             if r is not GrammarRule:
