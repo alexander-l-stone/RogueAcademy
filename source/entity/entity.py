@@ -1,6 +1,6 @@
 class Entity:
     def __init__(self, *components):
-        self.components = {}
+        self.components:dict = {}
 
         for component in components:
             self.set(component)
