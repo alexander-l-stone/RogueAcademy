@@ -17,7 +17,7 @@ class GrammarRule:
             # pop the rule
             arr.pop(i)
             # clone the template object
-            if r is not GrammarRule:
+            if type(r) is not GrammarRule:
                 arr.insert(i,copy.deepcopy(r))
                 continue
             # pick an option for this symbol
@@ -25,7 +25,7 @@ class GrammarRule:
             selection = rule.selections[rand]
             # add the chosen selection
             # go from the back so they end up in order
-            for child in selection.reversed():
+            for child in selection[::-1]:
                 arr.insert(i, child)
 
         return arr
