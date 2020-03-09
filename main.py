@@ -9,7 +9,7 @@ tcod.console_set_custom_font(
     tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
 
 #test object
-player_entity = DrawableEntity(30, 30, '@', (255, 255, 255))
+player_entity = DrawableEntity(30, 30, 0, '@', (255, 255, 255))
 
 # Initialize the root console in a context.
 with tcod.console_init_root(80, 60, order="F") as root_console:
