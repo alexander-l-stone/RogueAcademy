@@ -1,6 +1,5 @@
 class Entity:
     def __init__(self, *components):
-        print('components', components)
         self.components = {}
 
         for component in components:
