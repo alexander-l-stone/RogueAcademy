@@ -12,4 +12,6 @@ class DrawableEntity(Entity):
     
     def draw(self, topx, topy):
         tcod.console_set_default_foreground(0, self.color)
+        #find the offset coordinates and draw to that point on the screen
+        print(str(topx) + "," + str(topy)) # debug statemetn
         tcod.console_put_char(0, self.x-topx, self.y-topy, self.char, tcod.BKGND_NONE)

@@ -10,7 +10,7 @@ tcod.console_set_custom_font(
     tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
 
 #test object
-player_entity = DrawableEntity(30, 30, 0, '@', (255, 255, 255))
+player_entity = DrawableEntity(50, 50, 0, '@', (255, 255, 255))
 SCREEN_HEIGHT = 80
 SCREEN_WIDTH = 60
 
@@ -20,7 +20,6 @@ area.objdict[(player_entity.x, player_entity.y, player_entity.z)] = player_entit
 
 # Initialize the root console in a context.
 with tcod.console_init_root(SCREEN_HEIGHT, SCREEN_WIDTH, order="F") as root_console:
-    root_console.print_(x=0, y=0, string='Hello World!')
     while True:
         area.draw(player_entity.x, player_entity.y, player_entity.z, SCREEN_WIDTH, SCREEN_HEIGHT)
         tcod.console_flush()  # Show the console.
