@@ -10,7 +10,7 @@ tcod.console_set_custom_font(
     tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
 
 #test object
-player_entity = DrawableEntity(0, 50, 50, '@', (255, 255, 255))
+player_entity = DrawableEntity(0, 15, 15, '@', (255, 255, 255))
 SCREEN_HEIGHT = 80
 SCREEN_WIDTH = 60
 

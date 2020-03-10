@@ -2,7 +2,7 @@ from source.entity.entity import Entity
 import tcod
 
 class DrawableEntity(Entity):
-    def __init__(self, x:int, y:int, z:int, char:str, color:tuple, *components):
+    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, *components):
         Entity.__init__(self, *components)
         self.x:int = x
         self.y:int = y
@@ -11,6 +11,7 @@ class DrawableEntity(Entity):
         self.color:tuple = color
     
     def draw(self, topx, topy):
+        print(" I am drawing my slef")
         tcod.console_set_default_foreground(0, self.color)
         #find the offset coordinates and draw to that point on the screen
         print(str(topx) + "," + str(topy)) # debug statemetn
