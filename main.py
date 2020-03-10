@@ -10,11 +10,11 @@ tcod.console_set_custom_font(
     tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
 
 #test object
-player_entity = DrawableEntity(50, 50, 0, '@', (255, 255, 255))
+player_entity = DrawableEntity(0, 50, 50, '@', (255, 255, 255))
 SCREEN_HEIGHT = 80
 SCREEN_WIDTH = 60
 
-area = Area(100,100,2)
+area = Area(2,100,100)
 
 area.objdict[(player_entity.x, player_entity.y, player_entity.z)] = player_entity
 
