@@ -4,6 +4,8 @@ import copy
 
 class GrammarRule:
 
+    # TODO add code to store results as variables for use in the remainder of generation
+
     def __init__(self, selections:List[List]=[]):
         self.selections:List[List] = selections # list rule or typestring
 
