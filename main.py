@@ -2,6 +2,7 @@ import tcod
 import tcod.event
 
 from source.entity.drawableEntity import DrawableEntity
+from source.entity.player import Player
 from source.area.area import Area
 
 # Setup the font.
@@ -10,11 +11,11 @@ tcod.console_set_custom_font(
     tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
 
 #test object
-player_entity = DrawableEntity(0, 24, 24, '@', (255, 255, 255))
-SCREEN_HEIGHT = 50
-SCREEN_WIDTH = 50
+player_entity:Player = Player(0, 24, 24, '@', (255, 255, 255))
+SCREEN_HEIGHT:int = 50
+SCREEN_WIDTH:int = 50
 
-area = Area(2,100,100)
+area:Area = Area(2,100,100)
 
 for x in range(area.x_length):
     for y in range(area.y_length):
