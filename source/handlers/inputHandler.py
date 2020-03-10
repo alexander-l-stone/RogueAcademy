@@ -7,4 +7,11 @@ class InputHandler:
         pass
     
     def handle_keypress(self, event):
-        print(event)
+        if(event.sym == tcod.event.K_UP):
+            return {"type": "move", "value": (0, 0, -1)}
+        elif(event.sym == tcod.event.K_DOWN):
+            return {"type": "move", "value": (0, 0, 1)}
+        elif(event.sym == tcod.event.K_LEFT):
+            return {"type": "move", "value": (0, -1, 0)}
+        elif(event.sym == tcod.event.K_RIGHT):
+            return {"type": "move", "value": (0, 1, 0)}

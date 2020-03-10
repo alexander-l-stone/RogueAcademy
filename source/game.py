@@ -33,9 +33,14 @@ class Game:
     
     def game_loop(self):
         with tcod.console_init_root(self.SCREEN_HEIGHT, self.SCREEN_WIDTH, order="F", vsync=False) as root_console:
-            while True:
+            while not tcod.console_is_window_closed():
+                root_console.clear()
                 self.render()
                 for event in tcod.event.wait():
-                    self.InputHandler.handle_keypress(event)
+                    if event.type == "KEYDOWN":
+                        result = self.InputHandler.handle_keypress(event)
+                        if(result["type"] == "move"):
+                            if(self.player.attempt_move(result["value"][0], result["value"][1], result["value"][2], self.curr_area)):
+                                self.player.move(result["value"][0], result["value"][1], result["value"][2], self.curr_area)
                     if event.type == "QUIT":
                         raise SystemExit()

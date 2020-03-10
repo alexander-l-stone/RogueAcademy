@@ -12,10 +12,13 @@ class Moveable:
             else:
                 return True
         else:
-            if (area.map[entity.z+dz, entity.x+dx, entity.y+dy]):
+            try:
+                if (area.map[entity.z+dz, entity.x+dx, entity.y+dy]):
+                    return False
+                else:
+                    return True
+            except IndexError:
                 return False
-            else:
-                return True
     
     def move(self, entity, area, dz, dx, dy):
         area.objdict[entity.z, entity.x, entity.y] = None
