@@ -17,6 +17,12 @@ class Area:
         # z x y
         self.map = numpy.array([[[True for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
     
+    def add_object(self, entity:DrawableEntity):
+        self.objdict[(entity.z, entity.x, entity.y)] = entity
+    
+    def get_object(self, z:int, x:int, y:int):
+        return self.objdict.get((z, x, y))
+
     def draw(self, playerz, playerx, playery, screen_width, screen_height):
         corner_x = playerx-screen_width//2
         corner_y = playery-screen_height//2
