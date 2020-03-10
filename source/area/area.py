@@ -26,6 +26,7 @@ class Area:
                 #If an object is there, draw it.
                 #TODO: Make walls hide objects maybe???
                 if self.objdict.get((playerz,drawx,drawy)):
+                    print(f"drawing entity: {self.objdict[(playerz,drawx,drawy)].char}")
                     self.objdict[(playerz,drawx,drawy)].draw(corner_x, corner_y)
                 else:
                     #Try Catch for drawing stuff outside the area
