@@ -25,15 +25,16 @@ class ActionQueue:
         i = 0
         debug_dict = {}
         while i < len(self.queue):
-            breakpoint()
+            # breakpoint()
             debug_dict[f"self.queue[{i}] before subtracting"] = self.queue[i]
-            self.queue[i] -= 1
+            self.queue[i].time_remaining -= 1
             debug_dict[f"self.queue[{i}] after subtracting"] = self.queue[i]
-            if self.queue[i] == 0:
+            if self.queue[i].time_remaining == 0:
                 yield self.queue[i]
                 self.queue.pop(i)
             else:
-                i +=1
+                i += 1
+        print(debug_dict)
         return True
 
     def pop(self):
