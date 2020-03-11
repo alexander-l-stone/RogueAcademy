@@ -18,10 +18,46 @@ class Area:
         self.map = numpy.array([[[True for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
     
     def add_object(self, entity:DrawableEntity):
-        self.objdict[(entity.z, entity.x, entity.y)] = entity
+        """
+            Adds an entity to a square. If an enitty already exists there, make a square
+        """
+        if (self.objdict.get((entity.z, entity.x, entity.y))):
+            if type(self.objdict.get((entity.z, entity.x, entity.y))) == list:
+                self.objdict[(entity.z, entity.x, entity.y)].append(entity)
+            else:
+                self.objdict[(entity.z, entity.x, entity.y)] = [entity,
+                    self.objdict[(entity.z, entity.x, entity.y)]]
+        else:
+            self.objdict[(entity.z, entity.x, entity.y)] = entity
     
     def get_object(self, z:int, x:int, y:int):
+        """
+            Gets the entity or list of entities at that dict
+        """
         return self.objdict.get((z, x, y))
+    
+    def remove_object(self,entity:DrawableEntity):
+        """
+            Removes an entity from objdict
+
+            Returns true if it was removed, false otherwise
+        """
+        if type(self.objdict[(entity.z, entity.x, entity.y)]) == list:
+            if (entity in self.objdict.get((entity.z, entity.x, entity.y))):
+                self.objdict.get((entity.z, entity.x, entity.y)).remove(entity)
+                #If this is now the lonely entity in a list, make it not a list
+                if len(self.objdict.get((entity.z, entity.x, entity.y))) == 1:
+                        self.objdict[(entity.z, entity.x, entity.y)] = self.objdict[(entity.z, entity.x, entity.y)][0]
+                return True
+            else:
+                return False
+        else:
+            if (self.objdict[(entity.z, entity.x, entity.y)]) == entity:
+                self.objdict[(entity.z, entity.x, entity.y)] = None
+                return True
+            else: 
+                return False
+        
 
     def draw(self, playerz, playerx, playery, screen_width, screen_height):
         corner_x = playerx-screen_width//2
@@ -32,7 +68,10 @@ class Area:
                 #If an object is there, draw it.
                 #TODO: Make walls hide objects maybe???
                 if self.objdict.get((playerz,drawx,drawy)):
-                    self.objdict[(playerz,drawx,drawy)].draw(corner_x, corner_y)
+                    if type(self.objdict[(playerz, drawx, drawy)]) is list:
+                        self.objdict[(playerz, drawx, drawy)][0].draw(corner_x, corner_y)
+                    else:
+                        self.objdict[(playerz,drawx,drawy)].draw(corner_x, corner_y)
                 else:
                     #Try Catch for drawing stuff outside the area
                     #TODO: Better handling for stuff not in this structure
