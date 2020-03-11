@@ -3,7 +3,7 @@ from source.action.action import Action
 
 class ActionQueue:
     """
-        Class for holding all the actions characters currently want to execute
+    Class for holding all the actions characters currently want to execute
     """
     def __init__(self):
         self.queue:list = []
@@ -20,26 +20,21 @@ class ActionQueue:
     
     def get_next_action(self):
         """
-            Generator to get next action
+        Generator to get next action
         """
         i = 0
-        debug_dict = {}
         while i < len(self.queue):
-            # breakpoint()
-            debug_dict[f"self.queue[{i}] before subtracting"] = self.queue[i]
             self.queue[i].time_remaining -= 1
-            debug_dict[f"self.queue[{i}] after subtracting"] = self.queue[i]
             if self.queue[i].time_remaining == 0:
                 yield self.queue[i]
                 self.queue.pop(i)
             else:
                 i += 1
-        print(debug_dict)
         return True
 
     def pop(self):
         """
-            Iterate through the queue and reduce all actions time by 1. For every action whos time is now 0, resolve it.
+        Iterate through the queue and reduce all actions time by 1. For every action whos time is now 0, resolve it.
         """
         actions_to_resolve = []
         for action in self.get_next_action():

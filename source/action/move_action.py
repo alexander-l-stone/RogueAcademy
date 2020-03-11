@@ -12,9 +12,7 @@ class MoveAction(Action):
         """
             Override resolve to make the character move
         """
-        print('trying to move')
         if (self.originator.can_move(self.dz, self.dx, self.dy, self.area)):
-            print('moving')
             return self.originator.move(self.dz, self.dx, self.dy, self.area)
         else:
             return False
