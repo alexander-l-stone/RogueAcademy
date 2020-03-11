@@ -18,8 +18,8 @@ class GrammarRule:
             IMPORTANT: THE VALUE WILL NOT OUTPUT IF IT IS ASSIGNED!
             If you want the rule to output as well, include a GrammarVariable of the same name immediately after the assigning rule.
 
-            selections -- a list of lists of elements (GrammarRule, GrammarVariable, raw values) 
-            assignVar -- if not None, assigns the result to a variable of this name instead of outputting values.
+            selections -- A list of lists of elements (GrammarRule, GrammarVariable, raw values) 
+            assignVar -- A string or None. If not None, assigns the result to a variable of this name instead of outputting values.
         """
         self.selections:List[List] = selections # list rule or typestring
         self.assignVar = assignVar
