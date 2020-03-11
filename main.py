@@ -1,7 +1,7 @@
 import tcod
 import tcod.event
 
-from source.entity.drawableEntity import DrawableEntity
+from source.game import Game
 
 # Setup the font.
 tcod.console_set_custom_font(
@@ -9,15 +9,13 @@ tcod.console_set_custom_font(
     tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
 
 #test object
-player_entity = DrawableEntity(30, 30, '@', (255, 255, 255))
+
+SCREEN_HEIGHT:int = 50
+SCREEN_WIDTH:int = 50
+
+game = Game()
+game.generate_school()
 
 # Initialize the root console in a context.
-with tcod.console_init_root(80, 60, order="F") as root_console:
-    root_console.print_(x=0, y=0, string='Hello World!')
-    while True:
-        player_entity.draw()
-        tcod.console_flush()  # Show the console.
-        for event in tcod.event.wait():
-            if event.type == "QUIT":
-                raise SystemExit()
+game.game_loop()
     # The libtcod window will be closed at the end of this with-block.
