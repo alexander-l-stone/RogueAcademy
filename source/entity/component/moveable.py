@@ -3,7 +3,7 @@ class Moveable:
         #TODO: Use speed to add this move to the global action queue
         self.speed:float = speed
     
-    def attempt_move(self, entity, area, dz, dx, dy):
+    def can_move(self, entity, area, dz, dx, dy):
         """
             Check if I can move the entity the given delta.
 
