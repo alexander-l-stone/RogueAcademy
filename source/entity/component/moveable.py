@@ -10,18 +10,10 @@ class Moveable:
             Return true if possible, false if not possible.
         """
         if (area.objdict.get((entity.z+dz, entity.x+dx, entity.y+dy))):
-            if type(area.objdict[(entity.z+dz, entity.x+dx, entity.y+dy)]) is list:
-                for obj in area.objdict[(entity.z+dz, entity.x+dx, entity.y+dy)]:
-                    if obj.has("blocks_movement"):
-                        return False
-                return True
-            else:
-                if (area.objdict[(entity.z+dz, entity.x+dx, entity.y+dy)].has("blocks_movement")):
+            for obj in area.objdict[(entity.z+dz, entity.x+dx, entity.y+dy)]:
+                if obj.has("blocks_movement"):
                     return False
-                elif (area.map[entity.z+dz, entity.x+dx, entity.y+dy]):
-                    return False
-                else:
-                    return True
+            return True
         else:
             try:
                 if (area.map[entity.z+dz, entity.x+dx, entity.y+dy]):
