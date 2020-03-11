@@ -45,13 +45,19 @@ def test_use_variable():
     str_varname = "var_1"
     str_value = "populate"
     rule_assign = GrammarRule([[str_value]], str_varname)
-    print(f"rule_assign = {rule_assign}")
     var_recall_bad = GrammarVariable("var_garbage")
+    root = GrammarRule([[rule_assign, var_recall_bad]])
+    try:
+        result = GrammarRule.generate(root)
+        assert False
+    except ValueError:
+        assert True
+
     var_recall_good = GrammarVariable(str_varname)
-    root = GrammarRule([[rule_assign, var_recall_bad, var_recall_good]])
+    root = GrammarRule([[rule_assign, var_recall_good]])
     result = GrammarRule.generate(root)
     assert str_varname == var_recall_good
-    assert ["Variable var_garbage not found", str_value] == result
+    assert [str_value] == result
 
 def test_use_variable_multi_retains_identity():
     entity = Entity()
@@ -64,3 +70,13 @@ def test_use_variable_multi_retains_identity():
     assert entity is not result[0]
     assert entity is not result[1]
     assert result[0] is result[1]
+
+def test_internal_var():
+    # Could have assigned the vars to local variables but wanted to test that
+    # creating multiple GrammarVariables works, not that there is a reason it would not.
+    # Admittedly this is much less readable.
+    rule_assign2 = GrammarRule([["cod"]], "var2")
+    rule_assign1 = GrammarRule([[rule_assign2, GrammarVariable("var2")]], "var1")
+    rule_root = GrammarRule([[rule_assign1, GrammarVariable("var1"), GrammarVariable("var2")]]) 
+    result = GrammarRule.generate(rule_root)
+    assert ["cod", "cod"] == result

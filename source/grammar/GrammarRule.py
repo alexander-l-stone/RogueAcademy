@@ -37,6 +37,8 @@ class GrammarRule:
             (i.e. matching the assignVar value of a previously executed rule). They are populated by pointer, and have "is" equality
             to other populations of identically named GrammarVariables.
 
+            Attempting to invoke a variable which is not defined will throw an error.
+
             All values (including variable values) are deepcopied, so the original GrammarRules, GrammarVariables, and other values
             in the rule tree remain immutable and the rule can be safely reused for future generation.
         """
@@ -58,7 +60,7 @@ class GrammarRule:
                 selection = elem.selections[rand]
                 # assign to a variable if necessary
                 if elem.assignVar:
-                    variables[elem.assignVar] = copy.deepcopy(GrammarRule._expandRule(selection))
+                    variables[elem.assignVar] = copy.deepcopy(GrammarRule._expandRule(selection[::-1], variables))
                 else:
                     # add the chosen selection
                     # go from the back so they end up in order
@@ -71,7 +73,7 @@ class GrammarRule:
                     for child in value:
                         output.append(child)
                 else:
-                    output.append(f"Variable {elem} not found")
+                    raise ValueError(f"Variable {elem} not found")
             else:
                 # copy the template object
                 output.append(copy.deepcopy(elem))
