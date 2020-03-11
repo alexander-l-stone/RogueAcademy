@@ -8,6 +8,8 @@ from source.entity.player import Player
 
 class Game:
     def __init__(self):
+        #setup font
+        tcod.console_set_custom_font("arial12x12.png", tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
         self.curr_area:Area = Area(2, 100, 100)
         self.SCREEN_WIDTH:int = 50
         self.SCREEN_HEIGHT:int = 50
