@@ -15,10 +15,10 @@ class Entity:
             self.components[key] = component
             return
 
-    def get(self, name):
-        if self.has(name):
-            return self.components[name]
+    def get(self, key):
+        if self.has(key):
+            return self.components[key]
         return None
 
-    def has(self, name):
-        return self.components.get(name) is not None
+    def has(self, key):
+        return self.components.get(key) is not None
