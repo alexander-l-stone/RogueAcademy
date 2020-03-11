@@ -22,7 +22,7 @@ class GrammarRule:
             assignVar -- A string or None. If not None, assigns the result to a variable of this name instead of outputting values.
         """
         self.selections:List[List] = selections # list rule or typestring
-        self.assignVar = assignVar
+        self.assignVar = assignVar # string or None
 
     @staticmethod
     def generate(root): # must be type GrammarRule; can't use typing because GrammarRule is not yet defined
