@@ -24,5 +24,4 @@ class InputHandler:
         elif(event.sym == tcod.event.K_KP_3):
             return {"type": "move", "value": (0, 1, 1)}
         else:
-            print(event)
             return {"type": "none"}
