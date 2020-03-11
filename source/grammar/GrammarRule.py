@@ -8,7 +8,7 @@ class GrammarRule:
         self.selections:List[List] = selections # list rule or typestring
 
     @staticmethod
-    def generate(rule): #rule must be of type Grammar Rule
+    def generate(rule) -> List: #rule must be of type Grammar Rule
         if rule == None:
             return None
         arr:List = [rule]

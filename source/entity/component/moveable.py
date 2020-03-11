@@ -3,7 +3,7 @@ class Moveable:
         #TODO: Use speed to add this move to the global action queue
         self.speed:float = speed
     
-    def attempt_move(self, entity, area, dz, dx, dy):
+    def attempt_move(self, entity, area, dz, dx, dy) -> bool:
         """
             Check if I can move the entity the given delta.
 
@@ -24,7 +24,7 @@ class Moveable:
             except IndexError:
                 return False
     
-    def move(self, entity, area, dz, dx, dy):
+    def move(self, entity, area, dz, dx, dy) -> None:
         area.remove_object(entity)
         entity.z += dz
         entity.x += dx

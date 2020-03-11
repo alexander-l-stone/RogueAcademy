@@ -1,4 +1,5 @@
 import tcod.event
+from typing import Dict
 
 #TODO: Figure out a good way of doing input handling.
 
@@ -6,7 +7,7 @@ class InputHandler:
     def __init__(self):
         pass
     
-    def handle_keypress(self, event):
+    def handle_keypress(self, event) -> Dict[str,str]:
         if(event.sym == tcod.event.K_UP or event.sym == tcod.event.K_w or event.sym == tcod.event.K_KP_8):
             return {"type": "move", "value": (0, 0, -1)}
         elif(event.sym == tcod.event.K_DOWN or event.sym == tcod.event.K_s or event.sym == tcod.event.K_KP_2):
