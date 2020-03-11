@@ -4,13 +4,17 @@ class Moveable:
         self.speed:float = speed
     
     def attempt_move(self, entity, area, dz, dx, dy):
-        if (area.objdict.get((entity.z+dz, entity.x+dx, entity.y+dy))):
-            if (area.objdict[(entity.z+dz, entity.x+dx, entity.y+dy)].has("blocks_movement")):
-                return False
-            elif (area.map[entity.z+dz, entity.x+dx, entity.y+dy]):
-                return False
-            else:
-                return True
+        """
+            Check if I can move the entity the given delta.
+
+            Return true if possible, false if not possible.
+        """
+        entity_list = area.objdict.get((entity.z+dz, entity.x+dx, entity.y+dy))
+        if (entity_list):
+            for obj in entity_list:
+                if obj.has("blocks_movement"):
+                    return False
+            return True
         else:
             try:
                 if (area.map[entity.z+dz, entity.x+dx, entity.y+dy]):
@@ -21,9 +25,9 @@ class Moveable:
                 return False
     
     def move(self, entity, area, dz, dx, dy):
-        area.objdict[entity.z, entity.x, entity.y] = None
+        area.remove_object(entity)
         entity.z += dz
         entity.x += dx
         entity.y += dy
-        area.objdict[entity.z, entity.x, entity.y] = entity
+        area.add_object(entity)
 

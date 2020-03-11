@@ -18,10 +18,35 @@ class Area:
         self.map = numpy.array([[[True for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
     
     def add_object(self, entity:DrawableEntity):
-        self.objdict[(entity.z, entity.x, entity.y)] = entity
+        """
+            Adds an entity to a square.
+        """
+        if (self.objdict.get((entity.z, entity.x, entity.y))):
+            self.objdict[(entity.z, entity.x, entity.y)].append(entity)
+        else:
+            self.objdict[(entity.z, entity.x, entity.y)] = [entity]
     
     def get_object(self, z:int, x:int, y:int):
+        """
+            Gets the list of entities at the given coordinates
+        """
         return self.objdict.get((z, x, y))
+    
+    def remove_object(self,entity:DrawableEntity):
+        """
+            Removes an entity from objdict
+
+            Returns true if it was removed, false otherwise
+        """
+        entity_list = self.objdict.get((entity.z, entity.x, entity.y))
+        if (entity in entity_list):
+            entity_list.remove(entity)
+            if len(entity_list) == 0:
+                del self.objdict[(entity.z, entity.x, entity.y)]
+            return True
+        else:
+            return False
+        
 
     def draw(self, playerz, playerx, playery, screen_width, screen_height):
         corner_x = playerx-screen_width//2
@@ -32,7 +57,8 @@ class Area:
                 #If an object is there, draw it.
                 #TODO: Make walls hide objects maybe???
                 if self.objdict.get((playerz,drawx,drawy)):
-                    self.objdict[(playerz,drawx,drawy)].draw(corner_x, corner_y)
+                        #TODO: Find a better way to pick what to draw
+                        self.objdict[(playerz, drawx, drawy)][-1].draw(corner_x, corner_y)
                 else:
                     #Try Catch for drawing stuff outside the area
                     #TODO: Better handling for stuff not in this structure
