@@ -22,13 +22,9 @@ class Area:
             Adds an entity to a square. If an enitty already exists there, make a square
         """
         if (self.objdict.get((entity.z, entity.x, entity.y))):
-            if type(self.objdict.get((entity.z, entity.x, entity.y))) == list:
-                self.objdict[(entity.z, entity.x, entity.y)].append(entity)
-            else:
-                self.objdict[(entity.z, entity.x, entity.y)] = [entity,
-                    self.objdict[(entity.z, entity.x, entity.y)]]
+            self.objdict[(entity.z, entity.x, entity.y)].append(entity)
         else:
-            self.objdict[(entity.z, entity.x, entity.y)] = entity
+            self.objdict[(entity.z, entity.x, entity.y)] = [entity]
     
     def get_object(self, z:int, x:int, y:int):
         """
@@ -42,21 +38,11 @@ class Area:
 
             Returns true if it was removed, false otherwise
         """
-        if type(self.objdict[(entity.z, entity.x, entity.y)]) == list:
-            if (entity in self.objdict.get((entity.z, entity.x, entity.y))):
-                self.objdict.get((entity.z, entity.x, entity.y)).remove(entity)
-                #If this is now the lonely entity in a list, make it not a list
-                if len(self.objdict.get((entity.z, entity.x, entity.y))) == 1:
-                        self.objdict[(entity.z, entity.x, entity.y)] = self.objdict[(entity.z, entity.x, entity.y)][0]
-                return True
-            else:
-                return False
+        if (entity in self.objdict.get((entity.z, entity.x, entity.y))):
+            self.objdict.get((entity.z, entity.x, entity.y)).remove(entity)
+            return True
         else:
-            if (self.objdict[(entity.z, entity.x, entity.y)]) == entity:
-                self.objdict[(entity.z, entity.x, entity.y)] = None
-                return True
-            else: 
-                return False
+            return False
         
 
     def draw(self, playerz, playerx, playery, screen_width, screen_height):
@@ -68,10 +54,8 @@ class Area:
                 #If an object is there, draw it.
                 #TODO: Make walls hide objects maybe???
                 if self.objdict.get((playerz,drawx,drawy)):
-                    if type(self.objdict[(playerz, drawx, drawy)]) is list:
-                        self.objdict[(playerz, drawx, drawy)][0].draw(corner_x, corner_y)
-                    else:
-                        self.objdict[(playerz,drawx,drawy)].draw(corner_x, corner_y)
+                        #TODO: Find a better way to pick what to draw
+                        self.objdict[(playerz, drawx, drawy)][-1].draw(corner_x, corner_y)
                 else:
                     #Try Catch for drawing stuff outside the area
                     #TODO: Better handling for stuff not in this structure
