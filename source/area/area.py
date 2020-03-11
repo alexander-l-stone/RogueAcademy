@@ -28,7 +28,7 @@ class Area:
     
     def get_object(self, z:int, x:int, y:int):
         """
-            Gets the list of entities at that dict
+            Gets the list of entities at the given coordinates
         """
         return self.objdict.get((z, x, y))
     
