@@ -19,7 +19,7 @@ class Area:
     
     def add_object(self, entity:DrawableEntity):
         """
-            Adds an entity to a square. If an enitty already exists there, make a square
+            Adds an entity to a square.
         """
         if (self.objdict.get((entity.z, entity.x, entity.y))):
             self.objdict[(entity.z, entity.x, entity.y)].append(entity)
@@ -28,7 +28,7 @@ class Area:
     
     def get_object(self, z:int, x:int, y:int):
         """
-            Gets the entity or list of entities at that dict
+            Gets the list of entities at that dict
         """
         return self.objdict.get((z, x, y))
     
@@ -38,8 +38,11 @@ class Area:
 
             Returns true if it was removed, false otherwise
         """
-        if (entity in self.objdict.get((entity.z, entity.x, entity.y))):
-            self.objdict.get((entity.z, entity.x, entity.y)).remove(entity)
+        entity_list = self.objdict.get((entity.z, entity.x, entity.y))
+        if (entity in entity_list):
+            entity_list.remove(entity)
+            if len(entity_list) == 0:
+                del self.objdict[(entity.z, entity.x, entity.y)]
             return True
         else:
             return False

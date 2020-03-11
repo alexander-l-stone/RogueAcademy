@@ -23,4 +23,4 @@ def test_can_remove_entity(test_entity):
     area.add_object(test_entity)
     assert area.get_object(test_entity.z, test_entity.x, test_entity.y) == [test_entity]
     area.remove_object(test_entity)
-    assert area.get_object(test_entity.z, test_entity.x, test_entity.y) == []
+    assert area.get_object(test_entity.z, test_entity.x, test_entity.y) == None

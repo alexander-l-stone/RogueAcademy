@@ -5,12 +5,13 @@ class Moveable:
     
     def attempt_move(self, entity, area, dz, dx, dy):
         """
-            Check if I can move to the entity the given delta.
+            Check if I can move the entity the given delta.
 
             Return true if possible, false if not possible.
         """
-        if (area.objdict.get((entity.z+dz, entity.x+dx, entity.y+dy))):
-            for obj in area.objdict[(entity.z+dz, entity.x+dx, entity.y+dy)]:
+        entity_list = area.objdict.get((entity.z+dz, entity.x+dx, entity.y+dy))
+        if (entity_list):
+            for obj in entity_list:
                 if obj.has("blocks_movement"):
                     return False
             return True
