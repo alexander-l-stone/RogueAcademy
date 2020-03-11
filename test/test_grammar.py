@@ -101,6 +101,30 @@ def test_use_variable_multi_retains_identity():
     assert entity is not result[1]
     assert result[0] is result[1]
 
+def test_clone_variable_unique():
+    """
+        Clone flag on a GrammarVariable should cause the reference population to be cloned.
+        Clones should be pointer-unique to all other populations of that value.
+    """
+    entity = Entity()
+    entity2 = Entity()
+    assert entity is not entity2
+    rule_assign = GrammarRule([[entity]], "var1")
+    var_1 = GrammarVariable("var1")
+    var_1_clone = GrammarVariable("var1", True)
+    root = GrammarRule([[rule_assign, var_1, var_1_clone, var_1_clone, var_1]])
+    result = GrammarRule.generate(root)
+    assert entity is not result[0]
+    assert entity is not result[1]
+    assert entity is not result[2]
+    assert entity is not result[3]
+    assert result[0] is not result[1]
+    assert result[0] is not result[2]
+    assert result[0] is result[3] # these are both var_1, not cloned, should match
+    assert result[1] is not result[2]
+    assert result[1] is not result[3]
+    assert result[2] is not result[3]
+
 def test_internal_var():
     """
         Ensure that a variable can be invoked from within a later variable definition.

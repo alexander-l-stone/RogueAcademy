@@ -35,7 +35,8 @@ class GrammarRule:
 
             If a GrammarVariable appears, it will be populated with the contents of the variable of the same name
             (i.e. matching the assignVar value of a previously executed rule). They are populated by pointer, and have "is" equality
-            to other populations of identically named GrammarVariables.
+            to other populations of identically named GrammarVariables. If the GrammarVariable has the property clone=True, the value
+            will instead be deepcopied (again) before being added to output, and will not have pointer equality.
 
             Attempting to invoke a variable which is not defined will throw an error.
 
@@ -70,8 +71,12 @@ class GrammarRule:
                 # add the variable's value(s) directly to output (they've already been copied)
                 value = variables.get(elem)
                 if value:
-                    for child in value:
-                        output.append(child)
+                    if elem.clone:
+                        for child in value:
+                            output.append(copy.deepcopy(child))
+                    else:
+                        for child in value:
+                            output.append(child)
                 else:
                     raise ValueError(f"Variable {elem} not found")
             else:
@@ -84,8 +89,16 @@ class GrammarRule:
         return f"<{self.selections}, {self.assignVar}>"
 
 class GrammarVariable:
-    def __init__(self, name):
+    """
+        A variable reference to be used in GrammarRule trees. This node will be replaced with the
+        value stored in the variable of the same name.
+
+        name -- the variable to look up
+        clone -- If True, the variable value will be deepcopied before it is added to the generation output
+    """
+    def __init__(self, name:str, clone:bool=False):
         self.name = name
+        self.clone = clone
 
     def __eq__(self,other):
         if other is GrammarVariable:
