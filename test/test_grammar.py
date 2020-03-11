@@ -1,6 +1,7 @@
 import pytest
 from source.grammar.GrammarRule import GrammarRule
 from source.grammar.GrammarRule import GrammarVariable
+from source.entity.entity import Entity
 
 def test_can_instantiate_rule():
     assert GrammarRule
@@ -50,4 +51,16 @@ def test_use_variable():
     root = GrammarRule([[rule_assign, var_recall_bad, var_recall_good]])
     result = GrammarRule.generate(root)
     assert str_varname == var_recall_good
-    assert [None, str_value] == result
+    assert ["Variable var_garbage not found", str_value] == result
+
+def test_use_variable_multi_retains_identity():
+    entity = Entity()
+    entity2 = Entity()
+    assert entity is not entity2
+    rule_assign = GrammarRule([[entity]], "var1")
+    var_1 = GrammarVariable("var1")
+    root = GrammarRule([[rule_assign, var_1, var_1]])
+    result = GrammarRule.generate(root)
+    assert entity is not result[0]
+    assert entity is not result[1]
+    assert result[0] is result[1]
