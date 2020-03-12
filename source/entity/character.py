@@ -6,8 +6,8 @@ class Character(DrawableEntity):
         moveable:Moveable = Moveable(1)
         DrawableEntity.__init__(self, z, x, y, char, color, moveable, *components)
     
-    def attempt_move(self, dz:int, dx:int, dy:int, area):
+    def attempt_move(self, dz:int, dx:int, dy:int, area) -> bool:
         return self.get(Moveable).attempt_move(self, area, dz, dx, dy)
     
-    def move(self, dz:int, dx:int, dy:int, area):
+    def move(self, dz:int, dx:int, dy:int, area) -> None:
         return self.get(Moveable).move(self, area, dz, dx, dy)

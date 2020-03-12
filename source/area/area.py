@@ -1,6 +1,7 @@
 import numpy
 import tcod
 
+from typing import List
 from source.entity.drawableEntity import DrawableEntity
 
 class Area:
@@ -17,7 +18,7 @@ class Area:
         # z x y
         self.map = numpy.array([[[True for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
     
-    def add_object(self, entity:DrawableEntity):
+    def add_object(self, entity:DrawableEntity) -> None:
         """
             Adds an entity to a square.
         """
@@ -26,13 +27,13 @@ class Area:
         else:
             self.objdict[(entity.z, entity.x, entity.y)] = [entity]
     
-    def get_object(self, z:int, x:int, y:int):
+    def get_object(self, z:int, x:int, y:int) -> List[DrawableEntity]:
         """
             Gets the list of entities at the given coordinates
         """
         return self.objdict.get((z, x, y))
     
-    def remove_object(self,entity:DrawableEntity):
+    def remove_object(self,entity:DrawableEntity) -> bool:
         """
             Removes an entity from objdict
 
@@ -48,7 +49,7 @@ class Area:
             return False
         
 
-    def draw(self, playerz, playerx, playery, screen_width, screen_height):
+    def draw(self, playerz, playerx, playery, screen_width, screen_height) -> None:
         corner_x = playerx-screen_width//2
         corner_y = playery-screen_height//2
         # Find the coordinates from the center point(the player) to the top and bottom of the screen

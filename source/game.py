@@ -16,7 +16,7 @@ class Game:
         self.InputHandler:InputHandler = InputHandler()
         self.player:Player = Player(0, 24, 24, '@', (255, 255, 255))
     
-    def generate_school(self):
+    def generate_school(self) -> None:
         """
             This function will randomly generate the school
         """
@@ -29,11 +29,11 @@ class Game:
             for y in range(self.player.y-5, self.player.y-4):
                 self.curr_area.add_object(DrawableEntity(self.player.z, x, y, 'K', (x*5, abs(x*10 - y*10), y*5)))
 
-    def render(self):
+    def render(self) -> None:
         self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         tcod.console_flush()  # Show the console.
     
-    def game_loop(self):
+    def game_loop(self) -> None:
         with tcod.console_init_root(self.SCREEN_HEIGHT, self.SCREEN_WIDTH, order="F", vsync=False) as root_console:
             while not tcod.console_is_window_closed():
                 root_console.clear()
