@@ -1,6 +1,7 @@
 import pytest
 from source.grammar.GrammarRule import GrammarRule
 from source.grammar.GrammarRule import GrammarVariable
+from source.grammar.GrammarRule import GrammarVisualizer
 from source.entity.entity import Entity
 
 def test_can_instantiate_rule():
@@ -141,3 +142,13 @@ def test_internal_var():
     rule_root = GrammarRule([[rule_assign0, rule_assign1, GrammarVariable("var1"), GrammarVariable("var2")]]) 
     result = GrammarRule.generate(rule_root)
     assert ["cod", "dog", "cod", "dog"] == result
+
+def test_visualize():
+    rule_assign2 = GrammarRule([["cod", GrammarVariable("var0")]], "var2")
+    rule_assign1 = GrammarRule([[rule_assign2, GrammarVariable("var2")], [rule_assign2, GrammarVariable("var2"), GrammarVariable("var1")]], "var1")
+    rule_assign0 = GrammarRule([["dog"]], "var0")
+    rule_root = GrammarRule([[rule_assign0, rule_assign1, GrammarVariable("var1"), GrammarVariable("var2")]]) 
+    print(f'{GrammarVisualizer.visualize(rule_root)}')
+    # set this to False to get the print to work so you can copy+paste
+    # to http://mshang.ca/syntree/ 
+    assert True

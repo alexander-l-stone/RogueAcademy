@@ -110,3 +110,36 @@ class GrammarVariable:
     
     def __hash__(self):
         return self.name.__hash__()
+
+class GrammarVisualizer:
+
+    def __init__(self, close:str):
+        self.close = close
+
+    @staticmethod
+    def visualize(root) -> str:
+        """
+           Exports the rule in syntree format
+           Paste the result in here
+           http://mshang.ca/syntree/
+        """
+        stack:list = [root]
+        output:str = ""
+        while len(stack) > 0:
+            elem = stack.pop()
+            if type(elem) is GrammarRule:
+                output += "[Rule "
+                stack.append(GrammarVisualizer("]"))
+                for sel in elem.selections:
+                    stack.append(GrammarVisualizer("[}]"))
+                    for child in sel:
+                        stack.append(child)
+                    stack.append(GrammarVisualizer("[{]"))
+            elif type(elem) is GrammarVariable:
+                output += "[Var " + str(elem) + "]"
+            elif type(elem) is GrammarVisualizer:
+                output += elem.close
+            else:
+                output += "[Data "+str(elem) + "]"
+        return output
+
