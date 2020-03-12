@@ -17,7 +17,7 @@ class Moveable:
             return True
         else:
             try:
-                if (area.map[entity.z+dz, entity.x+dx, entity.y+dy]):
+                if (area.tileset[area.map[entity.z+dz, entity.x+dx, entity.y+dy]].has('blocks_movement')):
                     return False
                 else:
                     return True

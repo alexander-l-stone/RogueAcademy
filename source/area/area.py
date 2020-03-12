@@ -4,18 +4,17 @@ import tcod
 from source.entity.drawableEntity import DrawableEntity
 
 class Area:
-    def __init__(self, z_length: int, x_length: int, y_length: int, wall: DrawableEntity = DrawableEntity(-1, -1, -1, '#', (80, 80, 80), 'blocks_movement'), floor: DrawableEntity = DrawableEntity(-1, -1, -1, '.', (80, 80, 80))):
+    def __init__(self, z_length: int, x_length: int, y_length: int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement')}):
         self.x_length:int = x_length
         self.y_length:int = y_length
         if z_length < 1:
             self.z_length = 1
         else:
             self.z_length:int = z_length
-        self.wall:DrawableEntity = wall
-        self.floor:DrawableEntity = floor
+        self.tileset:dict = tileset
         self.objdict:dict = {}
         # z x y
-        self.map = numpy.array([[[True for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
+        self.map = numpy.array([[[0 for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
     
     def add_object(self, entity:DrawableEntity):
         """
@@ -63,21 +62,12 @@ class Area:
                     #Try Catch for drawing stuff outside the area
                     #TODO: Better handling for stuff not in this structure
                     try:
-                        #If the map point exists its a wall
-                        if self.map[playerz][drawx][drawy]:
-                            #Set the default wall's coordinates to the correct ones
-                            self.wall.z = playerz
-                            self.wall.x = drawx
-                            self.wall.y = drawy
-                            #Draw it
-                            self.wall.draw(corner_x, corner_y)
-                        else:
-                            #Set the default floor's coordinates to the correct ones
-                            self.floor.z = playerz
-                            self.floor.x = drawx
-                            self.floor.y = drawy
-                            #Draw it
-                            self.floor.draw(corner_x, corner_y)
+                        #Draw the tile
+                        tile = self.tileset[self.map[playerz][drawx][drawy]]
+                        tile.z = playerz
+                        tile.x = drawx
+                        tile.y = drawy
+                        tile.draw(corner_x, corner_y)
                     except IndexError:
                         #Draw blank space if nothing is expected there
                         tcod.console_set_default_foreground(0, tcod.black)
