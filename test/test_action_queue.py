@@ -23,57 +23,55 @@ def test_can_pop_empty_queue_for_no_effect():
     """
     action_queue = ActionQueue()
     action_queue.pop()
-    assert len(action_queue.queue) == 0
+    assert len(action_queue.heap) == 0
 
 def test_can_add_actions(action):
     """
     Tests that actions can be added to the queue
     """
     action_queue = ActionQueue()
-    action_queue.append(action)
-    assert action in action_queue.queue
+    action_queue.push(action)
+    assert action in action_queue.heap
 
 def test_can_pop_actions(action):
     """
-    Tests that after an action with time 1 is added to the queue, pop will remove it
+    Tests that after an action is pushed, pop will remove it
     """
     action_queue = ActionQueue()
-    action_queue.append(action)
+    action_queue.push(action)
     action_queue.pop()
-    assert action not in action_queue.queue
+    assert action not in action_queue.heap
+
+
+def test_can_resolve_actions(action):
+    """
+    Tests that an action with time will be removed by resolving time 1 actions
+    """
+    action_queue = ActionQueue()
+    action_queue.push(action)
+    action_queue.resolve_actions(1)
+    assert action not in action_queue.heap
 
 def test_long_actions_remain_after_pop(long_action):
     """
-    Tests that actions with sufficient time remaining are not popped after one pop
-    Tests that their time remaining is adjusted.
+    Tests that actions with sufficient time are not resolved by sending less than their time
     """
     action_queue = ActionQueue()
-    action_queue.append(long_action)
-    action_queue.pop()
-    assert long_action in action_queue.queue
-    assert long_action.time_remaining == 1
-
-def test_long_actions_can_be_removed(long_action):
-    """
-    Tests that multiple pops will remove the action.
-    """
-    action_queue = ActionQueue()
-    action_queue.append(long_action)
-    action_queue.pop()
-    action_queue.pop()
-    assert long_action not in action_queue.queue
+    action_queue.push(long_action)
+    action_queue.resolve_actions(1)
+    assert long_action in action_queue.heap
 
 def test_multiple_actions_resolve_at_once(action):
     """
-    This tests to see if multiple actions can get removed at once
+    This tests to see if multiple actions can get resolved at once
     """
     action_queue = ActionQueue()
-    action_queue.append(action)
+    action_queue.push(action)
     second_action = Action('self', 1)
-    action_queue.append(second_action)
-    action_queue.pop()
-    assert action not in action_queue.queue 
-    assert second_action not in action_queue.queue
+    action_queue.push(second_action)
+    action_queue.resolve_actions(1)
+    assert action not in action_queue.heap 
+    assert second_action not in action_queue.heap
 
 def test_actions_of_different_times_handled_properly(action, long_action):
     """
@@ -81,11 +79,26 @@ def test_actions_of_different_times_handled_properly(action, long_action):
     """
     second_action = Action('self', 1)
     action_queue = ActionQueue()
-    action_queue.append(second_action)
-    action_queue.append(long_action)
-    action_queue.pop()
-    assert long_action in action_queue.queue
-    assert long_action.time_remaining == 1
-    assert second_action not in action_queue.queue
+    action_queue.push(second_action)
+    action_queue.push(long_action)
+    action_queue.resolve_actions(1)
+    assert long_action in action_queue.heap
+    assert second_action not in action_queue.heap
+
+def test_resolve_many_actions():
+    """
+    This tests to see if the queue handles many actions of different times
+    """
+    action_queue = ActionQueue()
+    action_list = []
+    for i in range(0,10):
+        action = Action('test', i)
+        action_queue.push(action)
+        action_list.append(action)
+    assert action_list == action_queue.heap
+    for i in range(0,5):
+        action_queue.resolve_actions(i)
+    assert action_queue.heap = [action_list]
+
 
 #TODO: Write tests for player count

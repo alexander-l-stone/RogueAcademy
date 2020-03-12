@@ -26,7 +26,7 @@ class Character(DrawableEntity):
         """
         if self.can_move(dz, dx, dy, area):
             move_action:MoveAction = MoveAction( self, 1, area, dz, dx, dy)
-            queue.append(move_action)
+            queue.push(move_action)
             return True
         else:
             return False

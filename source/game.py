@@ -17,6 +17,7 @@ class Game:
         self.InputHandler:InputHandler = InputHandler()
         self.player:Player = Player(0, 24, 24, '@', (255, 255, 255))
         self.global_queue = ActionQueue()
+        self.global_time = 0
     
     def generate_school(self):
         """
@@ -41,7 +42,8 @@ class Game:
                 root_console.clear()
                 self.render()
                 if self.global_queue.player_actions_count > 0:
-                    self.global_queue.pop()
+                    self.global_queue.resolve_actions(self.global_time)
+                    self.global_time += 1
                 else:
                     for event in tcod.event.wait():
                         if event.type == "KEYDOWN":

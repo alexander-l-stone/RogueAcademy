@@ -6,40 +6,51 @@ class ActionQueue:
     Class for holding all the actions characters currently want to execute
     """
     def __init__(self):
-        self.queue:list = []
+        self.heap:list = []
         self.player_actions_count:int = 0
     
-    def append(self, action):
+    def push(self, action):
         """
         Append an action to the queue
         This always assumes action is an Action
         """
         if type(action.originator) is Player:
             self.player_actions_count += 1
-        self.queue.append(action)
+        self.heap.append(action)
+        i = len(self.heap-1)
+        while(i != 0 and self.heap[i//2].time > self.heap[i].time):
+            self.heap[i], self.heap[i//2] = self.heap[i//2], self.heap[i]
+            i = i//2
     
-    def get_next_action(self):
-        """
-        Generator to get next action
-        """
-        i = 0
-        while i < len(self.queue):
-            self.queue[i].time_remaining -= 1
-            if self.queue[i].time_remaining == 0:
-                yield self.queue[i]
-                self.queue.pop(i)
-            else:
-                i += 1
-        return True
-
     def pop(self):
         """
-        Iterate through the queue and reduce all actions time by 1. For every action whos time is now 0, resolve it.
+        Take the top item of the queue
         """
-        actions_to_resolve = []
-        for action in self.get_next_action():
-            actions_to_resolve.append(action)
-        for resolvable in actions_to_resolve:
-            resolvable.resolve_action()
-            if type(resolvable.originator) is Player:
+        #TODO fix pop
+        action = self.heap[0]
+        self.heap[0] = self.heap[-1]
+        self.heap = self.heap[0:-1]
+        i = 0
+        while (i*2 < len(self.heap)):
+            try:
+                if(self.heap[i*2].time < self.heap[i*2+1]):
+                    least_index = i*2
+                else:
+                    least_index = i*2+1
+                if self.heap[i] > self.heap[least_index]:
+                    self.heap[i], self.heap[least_index] = self.heap[least_index], self.heap[i]
+                    i = least_index
+                else:
+                    break
+            except IndexError:
+                break
+        return action
+    
+    def resolve_actions(self, time):
+        action_list = []
+        while self.heap[0].time <= time:
+            action_list.append(self.pop())
+        for action in action_list:
+            if type(action.originator) is Player:
                 self.player_actions_count -= 1
+            action.resolve_action()
