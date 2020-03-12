@@ -8,30 +8,37 @@ from source.entity.player import Player
 
 class Game:
     def __init__(self):
-        self.curr_area:Area = Area(2, 100, 100)
+        #setup font
+        tcod.console_set_custom_font("arial12x12.png", tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
+        tileset = {1: DrawableEntity(-1, -1, -1, '.', (100, 100, 100)),
+                    0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement'),
+                    2: DrawableEntity(-1, -1, -1, '.', (0, 0, 255))}
+        self.curr_area:Area = Area(2, 100, 100, tileset)
         self.SCREEN_WIDTH:int = 50
         self.SCREEN_HEIGHT:int = 50
         self.InputHandler:InputHandler = InputHandler()
         self.player:Player = Player(0, 24, 24, '@', (255, 255, 255))
     
-    def generate_school(self):
+    def generate_school(self) -> None:
         """
             This function will randomly generate the school
         """
         for x in range(self.curr_area.x_length):
             for y in range(self.curr_area.y_length):
                 if (x+1) % 5 == 0 or (y+1) % 5 == 0:
-                    self.curr_area.map[0, x, y] = False
+                    self.curr_area.map[0, x, y] = 1
+                if(x+1) % 9 == 0 or (y+1) % 9 == 0:
+                    self.curr_area.map[0, x, y] = 2
         self.curr_area.add_object(self.player)
         for x in range(self.player.x-5, self.player.x-4):
             for y in range(self.player.y-5, self.player.y-4):
                 self.curr_area.add_object(DrawableEntity(self.player.z, x, y, 'K', (x*5, abs(x*10 - y*10), y*5)))
 
-    def render(self):
+    def render(self) -> None:
         self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         tcod.console_flush()  # Show the console.
     
-    def game_loop(self):
+    def game_loop(self) -> None:
         with tcod.console_init_root(self.SCREEN_HEIGHT, self.SCREEN_WIDTH, order="F", vsync=False) as root_console:
             while not tcod.console_is_window_closed():
                 root_console.clear()

@@ -25,7 +25,7 @@ class GrammarRule:
         self.assignVar = assignVar # string or None
 
     @staticmethod
-    def generate(root): # must be type GrammarRule; can't use typing because GrammarRule is not yet defined
+    def generate(root) -> List: # GrammarRule or List
         """
             Expands the given rule recursively. If a rule has assignVariable set, instead of outputting it will
             store its output in a variable which persists until the end of generation. There is no scoping, but the
@@ -43,7 +43,7 @@ class GrammarRule:
             All values (including variable values) are deepcopied, so the original GrammarRules, GrammarVariables, and other values
             in the rule tree remain immutable and the rule can be safely reused for future generation.
         """
-        if root == None or type(root) is not GrammarRule:
+        if root == None:
             return None
         return GrammarRule._expandRule([root], {})
 
