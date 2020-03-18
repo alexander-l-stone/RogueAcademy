@@ -144,11 +144,16 @@ def test_internal_var():
     assert ["cod", "dog", "cod", "dog"] == result
 
 def test_visualize():
+    """
+    Parses a sample syntax to output.
+    Tests against a hardcoded sample output.
+    """
     rule_assign2 = GrammarRule([["cod", GrammarVariable("var0")]], "var2")
     rule_assign1 = GrammarRule([[rule_assign2, GrammarVariable("var2")], [rule_assign2, GrammarVariable("var2"), GrammarVariable("var1")]], "var1")
     rule_assign0 = GrammarRule([["dog"]], "var0")
     rule_root = GrammarRule([[rule_assign0, rule_assign1, GrammarVariable("var1"), GrammarVariable("var2")]]) 
-    print(f'{GrammarVisualizer.visualize(rule_root)}')
+    visual = GrammarVisualizer.visualize(rule_root)
+    print(f'{visual}')
     # set this to False to get the print to work so you can copy+paste
     # to http://mshang.ca/syntree/ 
-    assert True
+    assert visual == "[Rule [{][Var var2][Var var1][Rule [{][Var var1][Var var2][Rule [{][Var var0][Data cod][}]][}][{][Var var2][Rule [{][Var var0][Data cod][}]][}]][Rule [{][Data dog][}]][}]]"

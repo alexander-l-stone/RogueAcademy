@@ -128,7 +128,7 @@ class GrammarVisualizer:
         while len(stack) > 0:
             elem = stack.pop()
             if type(elem) is GrammarRule:
-                output += "[Rule "
+                output = f"{output}[Rule "
                 stack.append(GrammarVisualizer("]"))
                 for sel in elem.selections:
                     stack.append(GrammarVisualizer("[}]"))
@@ -136,10 +136,10 @@ class GrammarVisualizer:
                         stack.append(child)
                     stack.append(GrammarVisualizer("[{]"))
             elif type(elem) is GrammarVariable:
-                output += "[Var " + str(elem) + "]"
+                output = f"{output}[Var {str(elem)}]"
             elif type(elem) is GrammarVisualizer:
-                output += elem.close
+                output = f"{output}{elem.close}"
             else:
-                output += "[Data "+str(elem) + "]"
+                output = f"{output}[Data {str(elem)}]"
         return output
 
