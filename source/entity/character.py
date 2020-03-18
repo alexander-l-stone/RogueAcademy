@@ -9,20 +9,20 @@ class Character(DrawableEntity):
     
     def can_move(self, dz:int, dx:int, dy:int, area):
         """
-            Check if a character can move somewhere
+        Check if a character can move somewhere
         """
         return self.get(Moveable).can_move(self, area, dz, dx, dy)
     
     def move(self, dz:int, dx:int, dy:int, area):
         """
-            Makes a character move
+        Makes a character move
         """
         return self.get(Moveable).move(self, area, dz, dx, dy)
 
     #TODO: Rename this to something better
     def move_action(self, dz:int, dx:int, dy:int, area, queue):
         """
-            Generates a move action for this character
+        Generates a move action for this character
         """
         if self.can_move(dz, dx, dy, area):
             move_action:MoveAction = MoveAction( self, 1, area, dz, dx, dy)
