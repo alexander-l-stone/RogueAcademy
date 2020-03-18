@@ -4,7 +4,7 @@ from source.entity.component.moveable import Moveable
 def test_can_instantiate_character():
     assert Character
     character = Character(0, 1, 1, '@', (255, 255, 255))
-    assert type(character) is Character
+    assert isinstance(character, Character)
 
 def test_character_has_moveable():
     character = Character(0, 1, 1, '@', (255, 255, 255))

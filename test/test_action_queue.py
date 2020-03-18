@@ -1,5 +1,7 @@
 from source.action.action_queue import ActionQueue
 from source.action.action import Action
+from source.action.move_action import MoveAction
+import random
 
 def test_can_instantiate_action():
     """
@@ -7,7 +9,7 @@ def test_can_instantiate_action():
     """
     assert Action
     action = Action('test', 1)
-    assert type(action) is Action
+    assert isinstance(action, Action)
 
 def test_can_instantiate_action_queue():
     """
@@ -15,7 +17,7 @@ def test_can_instantiate_action_queue():
     """
     assert ActionQueue
     action_queue = ActionQueue()
-    assert type(action_queue) is ActionQueue
+    assert isinstance(action_queue, ActionQueue)
 
 def test_can_pop_empty_queue_for_no_effect():
     """
@@ -85,27 +87,42 @@ def test_actions_of_different_times_handled_properly(action, long_action):
     assert long_action in action_queue.heap
     assert second_action not in action_queue.heap
 
-def test_resolve_many_actions():
+def test_pop_order():
     """
-    This tests to see if the queue handles many actions of different times
+    This tests to see if the queue returns actions in temporal order
     """
     action_queue = ActionQueue()
-    action_list = []
-    for i in range(0,10):
+    rand_order = list(range(0,10))
+    random.shuffle(rand_order)
+    print(rand_order)
+    for i in rand_order:
         action = Action('test', i)
         action_queue.push(action)
-        action_list.append(action)
-        if len(action_queue.heap) > i*2:
-            assert action_queue.heap[i].time <= action_queue.heap[i*2].time
-        if len(action_queue.heap) > i*2+1:
-            assert action_queue.heap[i].time <= action_queue.heap[i*2+1].time
-    for i in range(0,5):
-        action_queue.resolve_actions(i)
-        for n in range(0, len(action_queue.heap)):
-            if len(action_queue.heap) > n*2:
-                assert action_queue.heap[n].time <= action_queue.heap[n*2].time
-            if len(action_queue.heap) > n*2+1:
-                assert action_queue.heap[n].time <= action_queue.heap[n*2+1].time
+    for i in range(0,10):
+        action = action_queue.pop()
+        assert action.time == i
+
+def test_multiple_resolve():
+    """
+    This tests to see if the queue handles nonadjacent resolution
+    """
+    action_queue = ActionQueue()
+    rand_order = list(range(0,10))
+    random.shuffle(rand_order)
+    for i in rand_order:
+        action = Action(f'test {i}', i)
+        action_queue.push(action)
+    assert len(action_queue.heap) == 10
+    for time,length in ((2,7),(4,5),(8,1),(10,0)):
+        action_queue.resolve_actions(time)
+        assert len(action_queue.heap) == length
+
+def test_action_child_type():
+    action = Action(None, 1)
+    m_act = MoveAction(None, 1, None, 0, 0, 0)
+    assert isinstance(action, Action)
+    assert isinstance(m_act, MoveAction)
+    assert isinstance(m_act, Action)
 
 
 #TODO: Write tests for player count

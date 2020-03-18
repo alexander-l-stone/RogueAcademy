@@ -1,7 +1,9 @@
 from source.action.action import Action
+from source.area.area import Area
+from source.entity.entity import Entity
 
 class MoveAction(Action):
-    def __init__(self, originator, time_remaining, area, dz, dx, dy):
+    def __init__(self, originator:Entity, time_remaining:int, area:Area, dz:int, dx:int, dy:int):
         Action.__init__(self, originator, time_remaining)
         self.area = area
         self.dz = dz

@@ -17,7 +17,7 @@ class GrammarRule:
             # pop the rule
             arr.pop(i)
             # clone the template object
-            if type(r) is not GrammarRule:
+            if not isinstance(r, GrammarRule):
                 arr.insert(i,copy.deepcopy(r))
                 continue
             # pick an option for this symbol
