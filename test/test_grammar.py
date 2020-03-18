@@ -156,4 +156,4 @@ def test_visualize():
     print(f'{visual}')
     # set this to False to get the print to work so you can copy+paste
     # to http://mshang.ca/syntree/ 
-    assert visual == "[Rule [{][Var var2][Var var1][Rule [{][Var var1][Var var2][Rule [{][Var var0][Data cod][}]][}][{][Var var2][Rule [{][Var var0][Data cod][}]][}]][Rule [{][Data dog][}]][}]]"
+    assert visual == "[Rule [Selection [Var var2][Var var1][Rule [Selection [Var var1][Var var2][Rule [Selection [Var var0][Data cod]][Selection [Var var2][Rule [Selection [Var var0][Data cod]]][Rule [Selection [Data dog]]]"

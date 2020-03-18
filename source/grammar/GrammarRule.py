@@ -131,10 +131,10 @@ class GrammarVisualizer:
                 output = f"{output}[Rule "
                 stack.append(GrammarVisualizer("]"))
                 for sel in elem.selections:
-                    stack.append(GrammarVisualizer("[}]"))
+                    stack.append(GrammarVisualizer(""))
                     for child in sel:
                         stack.append(child)
-                    stack.append(GrammarVisualizer("[{]"))
+                    stack.append(GrammarVisualizer("[Selection "))
             elif type(elem) is GrammarVariable:
                 output = f"{output}[Var {str(elem)}]"
             elif type(elem) is GrammarVisualizer:
