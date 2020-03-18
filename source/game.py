@@ -7,6 +7,8 @@ from source.entity.drawableEntity import DrawableEntity
 from source.entity.player import Player
 from source.action.action_queue import ActionQueue
 
+from source.grammar.school.school_grammar import SchoolGenerator
+
 class Game:
     def __init__(self):
         #setup font
@@ -26,16 +28,14 @@ class Game:
         """
             This function will randomly generate the school
         """
+        generator = SchoolGenerator(self.curr_area)
+        result = generator.generate_school()
         for x in range(self.curr_area.x_length):
             for y in range(self.curr_area.y_length):
                 if (x+1) % 5 == 0 or (y+1) % 5 == 0:
-                    self.curr_area.map[0, x, y] = 1
-                if(x+1) % 9 == 0 or (y+1) % 9 == 0:
                     self.curr_area.map[0, x, y] = 2
+        self.player.x, self.player.y = result[0], result[1]
         self.curr_area.add_object(self.player)
-        for x in range(self.player.x-5, self.player.x-4):
-            for y in range(self.player.y-5, self.player.y-4):
-                self.curr_area.add_object(DrawableEntity(self.player.z, x, y, 'K', (x*5, abs(x*10 - y*10), y*5)))
 
     def render(self) -> None:
         self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
