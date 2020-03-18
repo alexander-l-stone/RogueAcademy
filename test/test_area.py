@@ -4,7 +4,7 @@ from copy import deepcopy
 def test_can_instantiate_area():
     assert Area
     area = Area(1,1,1)
-    assert type(area) is Area
+    assert isinstance(area, Area)
 
 def test_can_add_and_get_object(test_entity):
     area = Area(2, 5, 5)

@@ -4,7 +4,7 @@ from source.entity.entity import Entity
 def test_can_instantiate_entity():
     assert Entity
     test_entity = Entity()
-    assert type(test_entity) is Entity
+    assert isinstance(test_entity, Entity)
 
 def test_cannot_grab_nonexisting_component_from_entity():
     test_entity = Entity()

@@ -3,11 +3,11 @@ class Moveable:
         #TODO: Use speed to add this move to the global action queue
         self.speed:float = speed
     
-    def attempt_move(self, entity, area, dz, dx, dy) -> bool:
+    def can_move(self, entity, area, dz, dx, dy):
         """
-            Check if I can move the entity the given delta.
+        Check if I can move the entity the given delta.
 
-            Return true if possible, false if not possible.
+        Return true if possible, false if not possible.
         """
         entity_list = area.objdict.get((entity.z+dz, entity.x+dx, entity.y+dy))
         if (entity_list):

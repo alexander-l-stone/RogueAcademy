@@ -5,6 +5,7 @@ from source.area.area import Area
 from source.handlers.inputHandler import InputHandler
 from source.entity.drawableEntity import DrawableEntity
 from source.entity.player import Player
+from source.action.action_queue import ActionQueue
 
 class Game:
     def __init__(self):
@@ -18,6 +19,8 @@ class Game:
         self.SCREEN_HEIGHT:int = 50
         self.InputHandler:InputHandler = InputHandler()
         self.player:Player = Player(0, 24, 24, '@', (255, 255, 255))
+        self.global_queue = ActionQueue()
+        self.global_time = 0
     
     def generate_school(self) -> None:
         """
@@ -43,11 +46,14 @@ class Game:
             while not tcod.console_is_window_closed():
                 root_console.clear()
                 self.render()
-                for event in tcod.event.wait():
-                    if event.type == "KEYDOWN":
-                        result = self.InputHandler.handle_keypress(event)
-                        if(result["type"] == "move"):
-                            if(self.player.attempt_move(result["value"][0], result["value"][1], result["value"][2], self.curr_area)):
-                                self.player.move(result["value"][0], result["value"][1], result["value"][2], self.curr_area)
-                    if event.type == "QUIT":
-                        raise SystemExit()
+                if self.global_queue.player_actions_count > 0:
+                    self.global_queue.resolve_actions(self.global_time)
+                    self.global_time += 1
+                else:
+                    for event in tcod.event.wait():
+                        if event.type == "KEYDOWN":
+                            result = self.InputHandler.handle_keypress(event)
+                            if(result["type"] == "move"):
+                                self.player.move_action(result["value"][0], result["value"][1], result["value"][2], self.curr_area, self.global_queue)
+                        if event.type == "QUIT":
+                            raise SystemExit()
