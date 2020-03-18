@@ -67,7 +67,7 @@ def test_multiple_actions_resolve_at_once(action):
     """
     action_queue = ActionQueue()
     action_queue.push(action)
-    second_action = Action('self', 1)
+    second_action = Action('action_queue', 1)
     action_queue.push(second_action)
     action_queue.resolve_actions(1)
     assert action not in action_queue.heap 
@@ -77,7 +77,7 @@ def test_actions_of_different_times_handled_properly(action, long_action):
     """
     This tests to see if this can handle actions of different times
     """
-    second_action = Action('self', 1)
+    second_action = Action('action_queue', 1)
     action_queue = ActionQueue()
     action_queue.push(second_action)
     action_queue.push(long_action)
@@ -95,10 +95,17 @@ def test_resolve_many_actions():
         action = Action('test', i)
         action_queue.push(action)
         action_list.append(action)
-    assert action_list == action_queue.heap
+        if len(action_queue.heap) > i*2:
+            assert action_queue.heap[i].time < action_queue.heap[i*2].time
+        if len(action_queue.heap) > i*2+1:
+            assert action_queue.heap[i].time < action_queue.heap[i*2+1].time
     for i in range(0,5):
         action_queue.resolve_actions(i)
-    assert action_queue.heap = [action_list]
+        for n in range(0, len(action_queue.heap)):
+            if len(action_queue.heap) > n*2:
+                assert action_queue.heap[n].time < action_queue.heap[n*2].time
+            if len(action_queue.heap) > n*2+1:
+                assert action_queue.heap[n].time < action_queue.heap[n*2+1].time
 
 
 #TODO: Write tests for player count

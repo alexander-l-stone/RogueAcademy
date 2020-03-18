@@ -17,7 +17,7 @@ class ActionQueue:
         if type(action.originator) is Player:
             self.player_actions_count += 1
         self.heap.append(action)
-        i = len(self.heap-1)
+        i = len(self.heap)-1
         while(i != 0 and self.heap[i//2].time > self.heap[i].time):
             self.heap[i], self.heap[i//2] = self.heap[i//2], self.heap[i]
             i = i//2
@@ -27,6 +27,8 @@ class ActionQueue:
         Take the top item of the queue
         """
         #TODO fix pop
+        if(len(self.heap) < 1):
+            return False
         action = self.heap[0]
         self.heap[0] = self.heap[-1]
         self.heap = self.heap[0:-1]
@@ -48,7 +50,7 @@ class ActionQueue:
     
     def resolve_actions(self, time):
         action_list = []
-        while self.heap[0].time <= time:
+        while len(self.heap) > 0 and self.heap[0].time <= time:
             action_list.append(self.pop())
         for action in action_list:
             if type(action.originator) is Player:
