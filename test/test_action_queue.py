@@ -96,16 +96,16 @@ def test_resolve_many_actions():
         action_queue.push(action)
         action_list.append(action)
         if len(action_queue.heap) > i*2:
-            assert action_queue.heap[i].time < action_queue.heap[i*2].time
+            assert action_queue.heap[i].time <= action_queue.heap[i*2].time
         if len(action_queue.heap) > i*2+1:
-            assert action_queue.heap[i].time < action_queue.heap[i*2+1].time
+            assert action_queue.heap[i].time <= action_queue.heap[i*2+1].time
     for i in range(0,5):
         action_queue.resolve_actions(i)
         for n in range(0, len(action_queue.heap)):
             if len(action_queue.heap) > n*2:
-                assert action_queue.heap[n].time < action_queue.heap[n*2].time
+                assert action_queue.heap[n].time <= action_queue.heap[n*2].time
             if len(action_queue.heap) > n*2+1:
-                assert action_queue.heap[n].time < action_queue.heap[n*2+1].time
+                assert action_queue.heap[n].time <= action_queue.heap[n*2+1].time
 
 
 #TODO: Write tests for player count

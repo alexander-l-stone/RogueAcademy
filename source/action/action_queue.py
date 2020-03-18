@@ -35,11 +35,11 @@ class ActionQueue:
         i = 0
         while (i*2 < len(self.heap)):
             try:
-                if(self.heap[i*2].time < self.heap[i*2+1]):
+                if(self.heap[i*2].time < self.heap[i*2+1].time):
                     least_index = i*2
                 else:
                     least_index = i*2+1
-                if self.heap[i] > self.heap[least_index]:
+                if self.heap[i].time > self.heap[least_index].time:
                     self.heap[i], self.heap[least_index] = self.heap[least_index], self.heap[i]
                     i = least_index
                 else:
