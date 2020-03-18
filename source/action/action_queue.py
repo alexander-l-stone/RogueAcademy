@@ -16,6 +16,8 @@ class ActionQueue:
         Append an action to the queue
         This always assumes action is an Action
         """
+        if(type(action.originator) is Player):
+            self.player_actions_count += 1
         heapq.heappush(self.heap, action)
     
     def pop(self):
