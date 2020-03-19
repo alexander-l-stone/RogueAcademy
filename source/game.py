@@ -28,8 +28,7 @@ class Game:
         """
             This function will randomly generate the school
         """
-        generator = SchoolGenerator(self.curr_area)
-        result = generator.generate_school()
+        result = SchoolGenerator.generate_school(self.curr_area)
         for x in range(self.curr_area.x_length):
             for y in range(self.curr_area.y_length):
                 if (x+1) % 5 == 0 or (y+1) % 5 == 0:

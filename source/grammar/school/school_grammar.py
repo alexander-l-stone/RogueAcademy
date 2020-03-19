@@ -4,15 +4,19 @@ from source.grammar.GrammarRule import GrammarRule, GrammarVariable
 from source.area.area import Area
 
 #Grammar Library for SchoolGenerator
-#TODO: Assign Great Hall to a variable
-great_hall = GrammarRule([[{'size': (1, 30, 30), 'floor_tile': 1}]])
+rule_great_hall_size = GrammarRule([[30],[40]], "size_hall")
+# z x y floorTile
+rule_great_hall = GrammarRule([[1, rule_great_hall_size, rule_great_hall_size, 1]], "great_hall")
 # great_hall_ref = GrammarVariable('great_hall')
 
-#TODO: Differentiate between different types of rooms
-room = GrammarRule([[{'size': (1, 10, 10), 'floor_tile': 1}], [{'size': (1, 6, 6), 'floor_tile': 1}], [{'size': (1, 3, 3), 'floor_tile': 1}]])
+rule_room_size = GrammarRule([[3],[7],[10],[14]], "size")
+# z x y floorTile
+rule_room = GrammarRule([[1, rule_room_size, rule_room_size, 1]], "room")
 
-num_rooms = GrammarRule([[room, room, room], [room, room, room, room, room, room], [room]])
-school = GrammarRule([[great_hall, num_rooms]])
+# options 3, 6, 1
+rule_num_rooms = GrammarRule([[rule_room, rule_room, rule_room], [rule_room, rule_room, rule_room, rule_room, rule_room, rule_room]], "num_rooms")
+rule_num_rooms_compound = GrammarRule([[rule_num_rooms, rule_num_rooms, rule_num_rooms, rule_num_rooms]], "compound_rooms")
+rule_school = GrammarRule([[rule_great_hall, rule_num_rooms_compound, rule_num_rooms_compound]], "root")
 
 #TODO: Make this just a generate_school function
 class SchoolGenerator:
@@ -22,19 +26,33 @@ class SchoolGenerator:
     def __init__(self, area:Area):
         self.area = area
 
-# Make a Great Hall, and some number of rooms. Ensure that you can get from any room to any other room and that the great hall is connected to this network
-    def generate_school(self):
-        school_tree = GrammarRule.generate(school)
+    # Make a Great Hall, and some number of rooms. Ensure that you can get from any room to any other room and that the great hall is connected to this network
+    @staticmethod
+    def generate_school(area:Area):
+        school_tree = GrammarRule.generate(rule_school)
         startX = 0
         startY = 0
-        for element in school_tree:
-            randX = random.randrange(1 + element["size"][1], self.area.x_length - 2 - element["size"][1])
-            randY = random.randrange(1 + element["size"][2], self.area.y_length - 2 - element["size"][2])
-            #TODO: make RandZ
+        elements = []
+        i = 0
+        while i < len(school_tree):
+            # TODO make these a room class and return them at the end
+            elem = {}
+            elem['z'] = school_tree[i]
+            elem['x'] = school_tree[i+1]
+            elem['y'] = school_tree[i+2]
+            elem['tile'] = school_tree[i+3]
+            elements.append(elem)
+            i += 4
+        
+        for element in elements:
+            #randZ = random.randrange(1 + element['z'], area.z_length - 2 - element['z'])
+            randX = random.randrange(1 + element['x'], area.x_length - 2 - element['x'])
+            randY = random.randrange(1 + element['y'], area.y_length - 2 - element['y'])
             #Replace the prexisting tile with the floor_tile of the element
-            for x in range(randX, randX + element["size"][1]):
-                for y in range(randY, randY + element["size"][2]):
-                    self.area.map[0, x, y] = element["floor_tile"]
+            for x in range(randX, randX + element['x']):
+                for y in range(randY, randY + element['y']):
+                    area.map[0, x, y] = element["tile"]
                     startX = x
                     startY = y
+        # TODO instead of returning last room corner, use returned rooms to generate spawn point in great hall
         return (startX, startY)
