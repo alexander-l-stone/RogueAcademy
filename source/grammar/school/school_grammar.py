@@ -1,21 +1,23 @@
 import random
 import numpy
+from typing import List
 
 from source.grammar.GrammarRule import GrammarRule, GrammarVariable
 from source.area.area import Area
+from source.grammar.school.room import Room
 
 #Grammar Library for SchoolGenerator
 rule_great_hall_size = GrammarRule([[30],[40]], "size_hall")
 # z x y floorTile
-rule_great_hall = GrammarRule([[1, rule_great_hall_size, rule_great_hall_size, 1]], "great_hall")
+rule_great_hall = GrammarRule([[1, rule_great_hall_size, rule_great_hall_size, 1]], "great_hall", None, lambda sel: Room.create(sel))
 # great_hall_ref = GrammarVariable('great_hall')
 
-rule_room_size = GrammarRule([[]], "size", None, lambda x : random.randint(3,14))
+rule_room_size = GrammarRule([[]], "size", None, lambda sel : random.randint(3,14))
 # z x y floorTile
-rule_room = GrammarRule([[1, rule_room_size, rule_room_size, 1]], "room")
+rule_room = GrammarRule([[1, rule_room_size, rule_room_size, 1]], "room", None, lambda sel: Room.create(sel))
 
 # options 3, 6, 1
-rule_num_rooms = GrammarRule([[]], "num_rooms", None, lambda x : [rule_room for i in range(0,random.randint(3,20))])
+rule_num_rooms = GrammarRule([[]], "num_rooms", None, lambda sel : [rule_room for i in range(0,random.randint(3,20))])
 print(f"NUM_ROOMS = {GrammarRule.generate(rule_num_rooms)}")
 rule_school = GrammarRule([[rule_great_hall, rule_num_rooms]], "root")
 
@@ -47,32 +49,18 @@ class SchoolGenerator:
     # Make a Great Hall, and some number of rooms. Ensure that you can get from any room to any other room and that the great hall is connected to this network
     @staticmethod
     def generate_school(area:Area):
-        school_tree = GrammarRule.generate(rule_school)
-        startX = 0
-        startY = 0
-        elements = []
-        i = 0
-        while i < len(school_tree):
-            # TODO make these a room class and return them at the end
-            elem = {}
-            elem['z'] = school_tree[i]
-            elem['x'] = school_tree[i+1]
-            elem['y'] = school_tree[i+2]
-            elem['tile'] = school_tree[i+3]
-            elements.append(elem)
-            i += 4
+        rooms:List[Room] = GrammarRule.generate(rule_school)
+        
         xy_coords = []
-        for element in elements:
-            #randZ = random.randrange(1 + element['z'], area.z_length - 2 - element['z'])
-            randX = random.randrange(1 + element['x'], area.x_length - 2 - element['x'])
-            randY = random.randrange(1 + element['y'], area.y_length - 2 - element['y'])
-            #Replace the prexisting tile with the floor_tile of the element
-            xy_coords.append((random.randrange(randX, randX + element['x']), random.randrange(randY, randY + element['y']), element['z'], element["tile"]))
-            for x in range(randX, randX + element['x']):
-                for y in range(randY, randY + element['y']):
-                    area.map[0, x, y] = element["tile"]
-                    startX = x
-                    startY = y
+        for elem in rooms:
+            #randZ = random.randrange(1 + elem.z_length, area.z_length - 2 - elem.z_length)
+            elem.x_corner = random.randrange(1 + elem.x_length, area.x_length - 2 - elem.x_length)
+            elem.y_corner = random.randrange(1 + elem.y_length, area.y_length - 2 - elem.y_length)
+            #Replace the prexisting tile with the floor_tile of the elem
+            xy_coords.append((random.randrange(elem.x_corner, elem.x_corner + elem.x_length), random.randrange(elem.y_corner, elem.y_corner + elem.y_length), elem.z_length, elem.tiletype))
+            for x in range(elem.x_corner, elem.x_corner + elem.x_length):
+                for y in range(elem.y_corner, elem.y_corner + elem.y_length):
+                    area.map[0, x, y] = elem.tiletype
             #Connect all rooms
         print(xy_coords)
         while(len(xy_coords) >= 2):
@@ -87,5 +75,4 @@ class SchoolGenerator:
                 #Do Y First
                 SchoolGenerator.carve_v_corridor(curr_coords[1], xy_coords[0][1], curr_coords[0], 0, curr_coords[3], area)
                 SchoolGenerator.carve_h_corridor(curr_coords[0], xy_coords[0][0], xy_coords[0][1], 0, curr_coords[3], area)
-        # TODO instead of returning last room corner, use returned rooms to generate spawn point in great hall
-        return (startX, startY)
+        return rooms
