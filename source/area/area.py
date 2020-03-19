@@ -29,8 +29,6 @@ class Area:
                 if(drawx >= 0 and drawx < self.x_length and drawy >= 0 and drawy < self.y_length):
                     tile = self.tileset[self.map[playerz, drawx, drawy]]
                     if (tile.get('blocks_vision') == True):
-                        if((drawx+1)%5 == 0 or (drawy+1)%5 == 0):
-                            print(f"getting blocks vision that does not exist at: {drawx}, {drawy}")
                         fov_array[drawx - corner_x][drawy - corner_y] = 0
         return tcod.map.compute_fov(fov_array, (screen_width//2, screen_height//2), 5)
 
@@ -79,8 +77,8 @@ class Area:
                 if(fov_map[drawx-corner_x][drawy-corner_y] == False):
                     tcod.console_set_default_foreground(0, tcod.black)
                     tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
-                    if(drawx == playerx) and (drawy == playery):
-                        print(f"WTF Occured at: {drawx}, {drawy}")
+                    if(abs(drawx-playerx) <=5) and (abs(drawy-playery) <= 5):
+                        print(f"---\nCan't see: {drawx}, {drawy}\nPlayer:{playerx}, {playery}")
                     continue
                 #If an object is there, draw it.
                 #TODO: Make walls hide objects maybe???
@@ -99,5 +97,5 @@ class Area:
                         tile.draw(corner_x, corner_y)
                     except IndexError:
                         #Draw blank space if nothing is expected there
-                        tcod.console_set_default_foreground(0, tcod.black)
+                        tcod.console_set_default_foreground(0, tcod.white)
                         tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
