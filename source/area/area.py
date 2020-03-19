@@ -32,7 +32,7 @@ class Area:
                         if((drawx+1)%5 == 0 or (drawy+1)%5 == 0):
                             print(f"getting blocks vision that does not exist at: {drawx}, {drawy}")
                         fov_array[drawx - corner_x][drawy - corner_y] = 0
-        return tcod.map.compute_fov(fov_array, (screen_width//2, screen_height//2), 30)
+        return tcod.map.compute_fov(fov_array, (screen_width//2, screen_height//2), 5)
 
     def add_object(self, entity:DrawableEntity) -> None:
         """
