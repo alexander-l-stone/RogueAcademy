@@ -5,7 +5,7 @@ from typing import List
 from source.entity.drawableEntity import DrawableEntity
 
 class Area:
-    def __init__(self, z_length: int, x_length: int, y_length: int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement')}):
+    def __init__(self, z_length: int, x_length: int, y_length: int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement', 'blocks_vision')}):
         self.x_length:int = x_length
         self.y_length:int = y_length
         if z_length < 1:
@@ -17,6 +17,23 @@ class Area:
         # z x y
         self.map = numpy.array([[[0 for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
     
+    def make_fov_map(self, playerz, playerx, playery, screen_width, screen_height) -> numpy.array:
+        """
+        Makes a fov transparency map out of the screen shown to the user
+        """
+        fov_array = numpy.array([[1 for y in range(screen_height)] for x in range(screen_width)])
+        corner_x = playerx-screen_width//2
+        corner_y = playery-screen_height//2
+        for drawx in range(corner_x, playerx+screen_width//2):
+            for drawy in range(corner_y, playery+screen_height//2):
+                if(drawx >= 0 and drawx < self.x_length and drawy >= 0 and drawy < self.y_length):
+                    tile = self.tileset[self.map[playerz, drawx, drawy]]
+                    if (tile.get('blocks_vision') == True):
+                        if((drawx+1)%5 == 0 or (drawy+1)%5 == 0):
+                            print(f"getting blocks vision that does not exist at: {drawx}, {drawy}")
+                        fov_array[drawx - corner_x][drawy - corner_y] = 0
+        return tcod.map.compute_fov(fov_array, (screen_width//2, screen_height//2), 30)
+
     def add_object(self, entity:DrawableEntity) -> None:
         """
             Adds an entity to a square.
@@ -51,9 +68,20 @@ class Area:
     def draw(self, playerz, playerx, playery, screen_width, screen_height) -> None:
         corner_x = playerx-screen_width//2
         corner_y = playery-screen_height//2
+        fov_map = self.make_fov_map(playerz, playerx, playery, screen_width, screen_height)
         # Find the coordinates from the center point(the player) to the top and bottom of the screen
         for drawx in range(playerx-screen_width//2, playerx+screen_width//2):
+            if (drawx < 0):
+                continue
             for drawy in range(playery-screen_height//2, playery+screen_height//2):
+                if(drawy < 0):
+                    continue
+                if(fov_map[drawx-corner_x][drawy-corner_y] == False):
+                    tcod.console_set_default_foreground(0, tcod.black)
+                    tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
+                    if(drawx == playerx) and (drawy == playery):
+                        print(f"WTF Occured at: {drawx}, {drawy}")
+                    continue
                 #If an object is there, draw it.
                 #TODO: Make walls hide objects maybe???
                 if self.objdict.get((playerz,drawx,drawy)):
