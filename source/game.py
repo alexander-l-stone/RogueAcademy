@@ -29,10 +29,6 @@ class Game:
             This function will randomly generate the school
         """
         result = SchoolGenerator.generate_school(self.curr_area)
-        for x in range(self.curr_area.x_length):
-            for y in range(self.curr_area.y_length):
-                if (x+1) % 5 == 0 or (y+1) % 5 == 0:
-                    self.curr_area.map[0, x, y] = 2
         self.player.x, self.player.y = result[0], result[1]
         self.curr_area.add_object(self.player)
 

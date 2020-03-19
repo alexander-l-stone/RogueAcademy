@@ -27,6 +27,23 @@ class SchoolGenerator:
     def __init__(self, area:Area):
         self.area = area
 
+    @staticmethod
+    def carve_h_corridor(x1:int, x2:int, y:int, z:int, floor_int:int, area:Area):
+        """
+        Carve a horizontal corridor from z, x1, y to z, x2, y
+        """
+        print(f"Floor int: {floor_int}")
+        for x in range(min(x1, x2), max(x1, x2)):
+            area.map[z, x, y] = floor_int
+    
+    @staticmethod
+    def carve_v_corridor(y1: int, y2: int, x: int, z: int, floor_int: int, area: Area):
+        """
+        Carve a vertical corridor from z, x, y1 to z, x, y2
+        """
+        for y in range(min(y1, y2), max(y1, y2)):
+            area.map[z, x, y] = floor_int
+
     # Make a Great Hall, and some number of rooms. Ensure that you can get from any room to any other room and that the great hall is connected to this network
     @staticmethod
     def generate_school(area:Area):
@@ -44,16 +61,31 @@ class SchoolGenerator:
             elem['tile'] = school_tree[i+3]
             elements.append(elem)
             i += 4
-        
+        xy_coords = []
         for element in elements:
             #randZ = random.randrange(1 + element['z'], area.z_length - 2 - element['z'])
             randX = random.randrange(1 + element['x'], area.x_length - 2 - element['x'])
             randY = random.randrange(1 + element['y'], area.y_length - 2 - element['y'])
             #Replace the prexisting tile with the floor_tile of the element
+            xy_coords.append((random.randrange(randX, randX + element['x']), random.randrange(randY, randY + element['y']), element['z'], element["tile"]))
             for x in range(randX, randX + element['x']):
                 for y in range(randY, randY + element['y']):
                     area.map[0, x, y] = element["tile"]
                     startX = x
                     startY = y
+            #Connect all rooms
+        print(xy_coords)
+        while(len(xy_coords) >= 2):
+            curr_coords = xy_coords.pop()
+            if (random.randrange(0, 3) == 0):
+                print("Carving X")
+                #Do X first
+                SchoolGenerator.carve_h_corridor(curr_coords[0], xy_coords[0][0], curr_coords[1], 0, curr_coords[3], area)
+                SchoolGenerator.carve_v_corridor(curr_coords[1], xy_coords[0][1], xy_coords[0][0], 0, curr_coords[3], area)
+            else:
+                print("Carving Y")
+                #Do Y First
+                SchoolGenerator.carve_v_corridor(curr_coords[1], xy_coords[0][1], curr_coords[0], 0, curr_coords[3], area)
+                SchoolGenerator.carve_h_corridor(curr_coords[0], xy_coords[0][0], xy_coords[0][1], 0, curr_coords[3], area)
         # TODO instead of returning last room corner, use returned rooms to generate spawn point in great hall
         return (startX, startY)
