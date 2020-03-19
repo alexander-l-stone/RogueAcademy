@@ -1,4 +1,5 @@
 import random
+import numpy
 
 from source.grammar.GrammarRule import GrammarRule, GrammarVariable
 from source.area.area import Area
@@ -9,14 +10,14 @@ rule_great_hall_size = GrammarRule([[30],[40]], "size_hall")
 rule_great_hall = GrammarRule([[1, rule_great_hall_size, rule_great_hall_size, 1]], "great_hall")
 # great_hall_ref = GrammarVariable('great_hall')
 
-rule_room_size = GrammarRule([[3],[7],[10],[14]], "size")
+rule_room_size = GrammarRule([[]], "size", None, lambda x : random.randint(3,14))
 # z x y floorTile
 rule_room = GrammarRule([[1, rule_room_size, rule_room_size, 1]], "room")
 
 # options 3, 6, 1
-rule_num_rooms = GrammarRule([[rule_room, rule_room, rule_room], [rule_room, rule_room, rule_room, rule_room, rule_room, rule_room]], "num_rooms")
-rule_num_rooms_compound = GrammarRule([[rule_num_rooms, rule_num_rooms, rule_num_rooms, rule_num_rooms]], "compound_rooms")
-rule_school = GrammarRule([[rule_great_hall, rule_num_rooms_compound, rule_num_rooms_compound]], "root")
+rule_num_rooms = GrammarRule([[]], "num_rooms", None, lambda x : [rule_room for i in range(0,random.randint(3,20))])
+print(f"NUM_ROOMS = {GrammarRule.generate(rule_num_rooms)}")
+rule_school = GrammarRule([[rule_great_hall, rule_num_rooms]], "root")
 
 #TODO: Make this just a generate_school function
 class SchoolGenerator:

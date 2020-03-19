@@ -143,6 +143,41 @@ def test_internal_var():
     result = GrammarRule.generate(rule_root)
     assert ["cod", "dog", "cod", "dog"] == result
 
+def test_process():
+    """
+    Expand a rule with a process function
+    """
+    rule = GrammarRule([[]], "label", None, lambda x : "Success")
+    output = GrammarRule.generate(rule)
+    assert ["Success"] == output
+
+def test_process_gets_args():
+    """
+    Use the selection in a process lambda.
+    Ensure that selection is expanded before being passed in.
+    """
+    rule_child = GrammarRule([["Great"]])
+    rule = GrammarRule([[rule_child]], "label", None, lambda x : f"{x[0]} Success")
+    output = GrammarRule.generate(rule)
+    assert ["Great Success"] == output
+
+def test_process_expansion():
+    """
+    Expand a rule with a process function which returns expandables.
+    Ensure the function output is expanded and order is retained.
+    """
+    rule_child = GrammarRule([["Success"]], "child")
+    rule_processor = GrammarRule([[]], "processor", None, lambda x : rule_child)
+    rule_root = GrammarRule([[rule_processor]], "root")
+    output = GrammarRule.generate(rule_root)
+    assert ["Success"] == output
+
+    rule_child = GrammarRule([["Success"]], "child")
+    rule_processor = GrammarRule([[]], "processor", None, lambda x : ["Great", rule_child])
+    rule_root = GrammarRule([[rule_processor]], "root")
+    output = GrammarRule.generate(rule_root)
+    assert ["Great", "Success"] == output
+
 def test_visualize():
     """
     Parses a sample syntax to output.
