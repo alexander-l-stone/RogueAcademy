@@ -53,7 +53,11 @@ class Area:
         corner_y = playery-screen_height//2
         # Find the coordinates from the center point(the player) to the top and bottom of the screen
         for drawx in range(playerx-screen_width//2, playerx+screen_width//2):
+            if(drawx < 0 or drawx > self.x_length-1):
+                continue
             for drawy in range(playery-screen_height//2, playery+screen_height//2):
+                if(drawy < 0 or drawy > self.y_length-1):
+                    continue
                 #If an object is there, draw it.
                 #TODO: Make walls hide objects maybe???
                 if self.objdict.get((playerz,drawx,drawy)):

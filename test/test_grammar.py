@@ -70,7 +70,7 @@ def test_use_variable():
     """
     str_varname = "var_1"
     str_value = "populate"
-    rule_assign = GrammarRule([[str_value]], str_varname)
+    rule_assign = GrammarRule([[str_value]], "label_assign", str_varname)
     var_recall_bad = GrammarVariable("var_garbage")
     root = GrammarRule([[rule_assign, var_recall_bad]])
     try:
@@ -94,7 +94,7 @@ def test_use_variable_multi_retains_identity():
     entity = Entity()
     entity2 = Entity()
     assert entity is not entity2
-    rule_assign = GrammarRule([[entity]], "var1")
+    rule_assign = GrammarRule([[entity]], "label_assign", "var1")
     var_1 = GrammarVariable("var1")
     root = GrammarRule([[rule_assign, var_1, var_1]])
     result = GrammarRule.generate(root)
@@ -110,7 +110,7 @@ def test_clone_variable_unique():
     entity = Entity()
     entity2 = Entity()
     assert entity is not entity2
-    rule_assign = GrammarRule([[entity]], "var1")
+    rule_assign = GrammarRule([[entity]], "label_assign", "var1")
     var_1 = GrammarVariable("var1")
     var_1_clone = GrammarVariable("var1", True)
     root = GrammarRule([[rule_assign, var_1, var_1_clone, var_1_clone, var_1]])
@@ -136,24 +136,59 @@ def test_internal_var():
     # Could have assigned the vars to local variables but wanted to test that
     # creating multiple GrammarVariables works, not that there is a reason it would not.
     # Admittedly this is much less readable.
-    rule_assign2 = GrammarRule([["cod", GrammarVariable("var0")]], "var2")
-    rule_assign1 = GrammarRule([[rule_assign2, GrammarVariable("var2")]], "var1")
-    rule_assign0 = GrammarRule([["dog"]], "var0")
+    rule_assign2 = GrammarRule([["cod", GrammarVariable("var0")]], "label_assign2", "var2")
+    rule_assign1 = GrammarRule([[rule_assign2, GrammarVariable("var2")]], "label_assign1", "var1")
+    rule_assign0 = GrammarRule([["dog"]], "label_assign1", "var0")
     rule_root = GrammarRule([[rule_assign0, rule_assign1, GrammarVariable("var1"), GrammarVariable("var2")]]) 
     result = GrammarRule.generate(rule_root)
     assert ["cod", "dog", "cod", "dog"] == result
+
+def test_process():
+    """
+    Expand a rule with a process function
+    """
+    rule = GrammarRule([[]], "label", None, lambda sel : "Success")
+    output = GrammarRule.generate(rule)
+    assert ["Success"] == output
+
+def test_process_gets_args():
+    """
+    Use the selection in a process lambda.
+    Ensure that selection is expanded before being passed in.
+    """
+    rule_child = GrammarRule([["Great"]])
+    rule = GrammarRule([[rule_child]], "label", None, lambda sel : f"{sel[0]} Success")
+    output = GrammarRule.generate(rule)
+    assert ["Great Success"] == output
+
+def test_process_expansion():
+    """
+    Expand a rule with a process function which returns expandables.
+    Ensure the function output is expanded and order is retained.
+    """
+    rule_child = GrammarRule([["Success"]], "child")
+    rule_processor = GrammarRule([[]], "processor", None, lambda sel : rule_child)
+    rule_root = GrammarRule([[rule_processor]], "root")
+    output = GrammarRule.generate(rule_root)
+    assert ["Success"] == output
+
+    rule_child = GrammarRule([["Success"]], "child")
+    rule_processor = GrammarRule([[]], "processor", None, lambda sel : ["Great", rule_child])
+    rule_root = GrammarRule([[rule_processor]], "root")
+    output = GrammarRule.generate(rule_root)
+    assert ["Great", "Success"] == output
 
 def test_visualize():
     """
     Parses a sample syntax to output.
     Tests against a hardcoded sample output.
     """
-    rule_assign2 = GrammarRule([["cod", GrammarVariable("var0")]], "var2")
-    rule_assign1 = GrammarRule([[rule_assign2, GrammarVariable("var2")], [rule_assign2, GrammarVariable("var2"), GrammarVariable("var1")]], "var1")
-    rule_assign0 = GrammarRule([["dog"]], "var0")
+    rule_assign2 = GrammarRule([["cod", GrammarVariable("var0")]], "label_assign2", "var2")
+    rule_assign1 = GrammarRule([[rule_assign2, GrammarVariable("var2")], [rule_assign2, GrammarVariable("var2"), GrammarVariable("var1")]], "label_assign1", "var1")
+    rule_assign0 = GrammarRule([["dog"]], "label_assign0", "var0")
     rule_root = GrammarRule([[rule_assign0, rule_assign1, GrammarVariable("var1"), GrammarVariable("var2")]]) 
     visual = GrammarVisualizer.visualize(rule_root)
     print(f'{visual}')
     # set this to False to get the print to work so you can copy+paste
     # to http://mshang.ca/syntree/ 
-    assert visual == "[Rule [Selection [Var var2][Var var1][Rule [Selection [Var var1][Var var2][Rule [Selection [Var var0][Data cod]][Selection [Var var2][Rule [Selection [Var var0][Data cod]]][Rule [Selection [Data dog]]]"
+    assert visual == "[Rule [Selection [Var var2][Var var1][label_assign1(Rule) [Selection [Var var1][Var var2][label_assign2(Rule) [Selection [Var var0][Data cod]][Selection [Var var2][label_assign2(Rule) [Selection [Var var0][Data cod]]][label_assign0(Rule) [Selection [Data dog]]]"

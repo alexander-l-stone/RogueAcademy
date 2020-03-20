@@ -1,4 +1,4 @@
-from typing import List,Dict
+from typing import List,Dict,Any,Callable,Union
 import random
 import copy
 
@@ -6,7 +6,7 @@ class GrammarRule:
 
     # TODO consider adding function hooks to rules for self-population
 
-    def __init__(self, selections:List[List]=[], assignVar:str=None):
+    def __init__(self, selections:List[List]=[], label:str=None, assignVar:str=None, process:Callable[[list], Any]=None):
         """
         Will expand to one of the selection sublists, each element of which will be
         recursively expanded (if rules or variables) and added to the grammar output in-order. A raw value
@@ -18,11 +18,21 @@ class GrammarRule:
         IMPORTANT: THE VALUE WILL NOT OUTPUT IF IT IS ASSIGNED!
         If you want the rule to output as well, include a GrammarVariable of the same name immediately after the assigning rule.
 
+        If process is present, after the output selection is generated the function in the process variable will
+        be run on the generated selection, it's return value expanded again as if it is a selection (or expanded as
+        a single element if the function returns a non-list), and its return value is then the final output of the rule.
+        If assignVar is present, this rule output will be assigned to variable instead of appended to the generation
+        output as per normal for assignVar.
+
         selections -- A list of lists of elements (GrammarRule, GrammarVariable, raw values) 
+        label -- string name WITHOUT WHITESPACE used for debugging and visualization. Do not include whitespace in the label.
         assignVar -- A string or None. If not None, assigns the result to a variable of this name instead of outputting values.
+        process -- A callable function or None. If not none, the function is run upon the generated selection, and its return value will replace the selection.
         """
         self.selections:List[List] = selections # list rule or typestring
-        self.assignVar = assignVar # string or None
+        self.label:str = label
+        self.assignVar:Union[str,None] = assignVar # string or None
+        self.process:Union[None,Callable[[list], Any]] = process
 
     @staticmethod
     def generate(root) -> List: # GrammarRule or List
@@ -32,6 +42,12 @@ class GrammarRule:
         rule tree is parsed in-order, so variables cannot be successfully invoked until the assigning rule node is parsed.
         A variable may be assigned to multiple times, overwriting the previous value. Previously parsed variables will retain
         whatever value existed in the variable at the time they were parsed.
+
+        Rules with a process function set will run that function on their generated selection and use the output of that
+        function in place of the generated selection. Even though the original output is fully expanded before being passed
+        to the process function, the process function's output will be again expanded. If the output was a list, it will be treated
+        as a selection. If it is a single element, that element will be expanded if it is expandable. The expanded output of process
+        will either be stored in a variable or output as determined normally by assignVar.
 
         If a GrammarVariable appears, it will be populated with the contents of the variable of the same name
         (i.e. matching the assignVar value of a previously executed rule). They are populated by pointer, and have "is" equality
@@ -48,12 +64,32 @@ class GrammarRule:
         return GrammarRule._expandRule([root], {})
 
     @staticmethod
-    def _expandRule(stack:List, variables:Dict):
+    def _expandRule(stack:List, variables:Dict) -> list:
         output:List = []
 
         while len(stack) > 0:
+            # debug prints for watching stack in realtime, do not delete
+            """
+            string = "["
+            for s in output:
+                string += str(s) + ", "
+            if (len(string) > 2):
+                string = string[0:-2] + "]"
+            else:
+                string += "]"
+            print(f"\nOUTPUT {string}")
+            string = "["
+            for s in stack:
+                string += str(s) + ", "
+            if (len(string) > 2):
+                string = string[0:-2] + "]"
+            else:
+                string += "]"
+            print(f"STACK {string}")
+            """
             # pop the element
             elem = stack.pop()
+            #print(f"POP {elem}")
 
             if type(elem) is GrammarRule:
                 # pick an option for this symbol
@@ -62,11 +98,20 @@ class GrammarRule:
                 # assign to a variable if necessary
                 if elem.assignVar:
                     variables[elem.assignVar] = copy.deepcopy(GrammarRule._expandRule(selection[::-1], variables))
+                    if elem.process:
+                        variables[elem.assignVar] = elem.process(variables[elem.assignVar])
                 else:
-                    # add the chosen selection
-                    # go from the back so they end up in order
-                    for child in selection[::-1]:
-                        stack.append(child)
+                    if elem.process:
+                        p_out = elem.process(copy.deepcopy(GrammarRule._expandRule(selection[::-1], variables)))
+                        if isinstance(p_out, list):
+                            # reverse the list so it is in stack order
+                            p_out = GrammarRule._expandRule(p_out[::-1], variables)
+                        else:
+                            p_out = GrammarRule._expandRule([p_out], variables)
+                        GrammarRule._pushall(stack, p_out)
+                    else:
+                        # add the chosen selection
+                        GrammarRule._pushall(stack, selection)
             elif type(elem) is GrammarVariable:
                 # add the variable's value(s) directly to output (they've already been copied)
                 value = variables.get(elem)
@@ -85,8 +130,15 @@ class GrammarRule:
 
         return output
     
+    @staticmethod
+    def _pushall(stack:list, selection:list):
+        # go from the back so they end up in order
+        for child in selection[::-1]:
+            #print(f"PUSH {child}")
+            stack.append(child)
+
     def __str__(self):
-        return f"<{self.selections}, {self.assignVar}>"
+        return f"<{self.selections}, {self.assignVar}, {self.process}>"
 
 class GrammarVariable:
     """
@@ -128,7 +180,10 @@ class GrammarVisualizer:
         while len(stack) > 0:
             elem = stack.pop()
             if type(elem) is GrammarRule:
-                output = f"{output}[Rule "
+                if elem.label:
+                    output = f"{output}[{elem.label}(Rule) "
+                else:
+                    output = f"{output}[Rule "
                 stack.append(GrammarVisualizer("]"))
                 for sel in elem.selections:
                     stack.append(GrammarVisualizer(""))
@@ -136,10 +191,10 @@ class GrammarVisualizer:
                         stack.append(child)
                     stack.append(GrammarVisualizer("[Selection "))
             elif type(elem) is GrammarVariable:
-                output = f"{output}[Var {str(elem)}]"
+                output = f"{output}[Var {elem}]"
             elif type(elem) is GrammarVisualizer:
                 output = f"{output}{elem.close}"
             else:
-                output = f"{output}[Data {str(elem)}]"
+                output = f"{output}[Data {elem}]"
         return output
 
