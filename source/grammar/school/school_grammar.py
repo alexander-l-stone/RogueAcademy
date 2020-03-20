@@ -18,7 +18,7 @@ rule_room = GrammarRule([[1, rule_room_size, rule_room_size, 1]], "room", None, 
 
 # options 3, 6, 1
 rule_num_rooms = GrammarRule([[]], "num_rooms", None, lambda sel : [rule_room for i in range(0,random.randint(3,20))])
-print(f"NUM_ROOMS = {GrammarRule.generate(rule_num_rooms)}")
+# print(f"NUM_ROOMS = {GrammarRule.generate(rule_num_rooms)}")
 rule_school = GrammarRule([[rule_great_hall, rule_num_rooms]], "root")
 
 #TODO: Make this just a generate_school function
@@ -34,7 +34,7 @@ class SchoolGenerator:
         """
         Carve a horizontal corridor from z, x1, y to z, x2, y
         """
-        print(f"Floor int: {floor_int}")
+        # print(f"Floor int: {floor_int}")
         for x in range(min(x1, x2), max(x1, x2)):
             area.map[z, x, y] = floor_int
     
@@ -62,16 +62,13 @@ class SchoolGenerator:
                 for y in range(elem.y_corner, elem.y_corner + elem.y_length):
                     area.map[0, x, y] = elem.tiletype
             #Connect all rooms
-        print(xy_coords)
         while(len(xy_coords) >= 2):
             curr_coords = xy_coords.pop()
             if (random.randrange(0, 3) == 0):
-                print("Carving X")
                 #Do X first
                 SchoolGenerator.carve_h_corridor(curr_coords[0], xy_coords[0][0], curr_coords[1], 0, curr_coords[3], area)
                 SchoolGenerator.carve_v_corridor(curr_coords[1], xy_coords[0][1], xy_coords[0][0], 0, curr_coords[3], area)
             else:
-                print("Carving Y")
                 #Do Y First
                 SchoolGenerator.carve_v_corridor(curr_coords[1], xy_coords[0][1], curr_coords[0], 0, curr_coords[3], area)
                 SchoolGenerator.carve_h_corridor(curr_coords[0], xy_coords[0][0], xy_coords[0][1], 0, curr_coords[3], area)
