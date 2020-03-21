@@ -5,6 +5,8 @@ from source.action.move_action import MoveAction
 class Character(DrawableEntity):
     def __init__(self, z:int, x:int, y:int, char:str, color:tuple, *components):
         moveable:Moveable = Moveable(1)
+        #TODO:Calculate vision_radius somehow
+        self.vision_radius = 8
         DrawableEntity.__init__(self, z, x, y, char, color, moveable, 'blocks_movement', *components)
     
     def can_move(self, dz:int, dx:int, dy:int, area):

@@ -37,7 +37,8 @@ class SchoolGenerator:
         # print(f"Floor int: {floor_int}")
         for x in range(min(x1, x2), max(x1, x2)):
             area.map[z, x, y] = floor_int
-    
+            area.fov_map[z, x, y] = 1
+
     @staticmethod
     def carve_v_corridor(y1: int, y2: int, x: int, z: int, floor_int: int, area: Area):
         """
@@ -45,6 +46,7 @@ class SchoolGenerator:
         """
         for y in range(min(y1, y2), max(y1, y2)):
             area.map[z, x, y] = floor_int
+            area.fov_map[z, x, y] = 1
 
     # Make a Great Hall, and some number of rooms. Ensure that you can get from any room to any other room and that the great hall is connected to this network
     @staticmethod
@@ -61,6 +63,8 @@ class SchoolGenerator:
             for x in range(elem.x_corner, elem.x_corner + elem.x_length):
                 for y in range(elem.y_corner, elem.y_corner + elem.y_length):
                     area.map[0, x, y] = elem.tiletype
+                    if(not area.tileset[elem.tiletype].has("blocks_vision")):
+                        area.fov_map[0,x,y] = 1
             #Connect all rooms
         while(len(xy_coords) >= 2):
             curr_coords = xy_coords.pop()
