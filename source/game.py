@@ -37,15 +37,17 @@ class Game:
     def render(self) -> None:
         self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         tcod.console_flush()  # Show the console.
-    
+
     def game_loop(self) -> None:
         with tcod.console_init_root(self.SCREEN_HEIGHT, self.SCREEN_WIDTH, order="F", vsync=False) as root_console:
+            root_console.clear()
+            self.render()
             while not tcod.console_is_window_closed():
-                root_console.clear()
-                self.render()
                 if self.global_queue.player_actions_count > 0:
                     self.global_queue.resolve_actions(self.global_time)
                     self.global_time += 1
+                    root_console.clear()
+                    self.render()
                 else:
                     for event in tcod.event.wait():
                         if event.type == "KEYDOWN":
