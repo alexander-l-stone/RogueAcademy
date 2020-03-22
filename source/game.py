@@ -17,9 +17,10 @@ class Game:
         tileset = {
                     0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement'),
                     1: DrawableEntity(-1, -1, -1, '.', (100, 100, 100)),
+                    2: DrawableEntity(-1, -1, -1, '#', (0, 0, 255), 'blocks_movement'),
                     3: DrawableEntity(-1, -1, -1, '.', (0, 0, 255)),
                     }
-        self.curr_area:Area = Area(2, 100, 100, tileset)
+        self.curr_area:Area = Area(2, 200, 200, tileset)
         self.SCREEN_WIDTH:int = 50
         self.SCREEN_HEIGHT:int = 50
         self.InputHandler:InputHandler = InputHandler()
