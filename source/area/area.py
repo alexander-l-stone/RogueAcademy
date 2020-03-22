@@ -16,6 +16,7 @@ class Area:
         self.objdict:dict = {}
         # z x y
         self.map = numpy.array([[[0 for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
+        # 0 means occluded, positive means visisble
         self.fov_map = numpy.array([[[0 for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
 
     def compute_fov(self, z, x, y, radius):
@@ -26,10 +27,10 @@ class Area:
         Adds an entity to a square.
         """
         if(entity.has("blocks_vision")):
-            self.fov_map[entity.z, entity.x, entity.y] = 1
+            self.fov_map[entity.z, entity.x, entity.y] = 0
+
         if (self.objdict.get((entity.z, entity.x, entity.y))):
             self.objdict[(entity.z, entity.x, entity.y)].append(entity)
-            
         else:
             self.objdict[(entity.z, entity.x, entity.y)] = [entity]
     
@@ -64,6 +65,8 @@ class Area:
     def draw(self, playerz, playerx, playery, screen_width, screen_height, vision_radius) -> None:
         corner_x = playerx-screen_width//2
         corner_y = playery-screen_height//2
+        #Check Field of view
+        fov = self.compute_fov(playerz, playerx, playery, vision_radius)
         # Find the coordinates from the center point(the player) to the top and bottom of the screen
         for drawx in range(playerx-screen_width//2, playerx+screen_width//2):
             if(drawx < 0 or drawx > self.x_length-1):
@@ -72,8 +75,6 @@ class Area:
                 if(drawy < 0 or drawy > self.y_length-1):
                     continue
                 #If an object is there, draw it.
-                #Check Field of view
-                fov = self.compute_fov(playerz, playerx, playery, vision_radius)
                 if(fov[drawx, drawy]):
                     tcod.console_set_default_background(0, tcod.gray)
                     #TODO: Make walls hide objects maybe???
