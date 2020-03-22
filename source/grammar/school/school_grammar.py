@@ -109,6 +109,7 @@ class SchoolGenerator:
                     area,
                     )
             prev_elem = elem
+        room_list[0].room_type = "great_hall"
         for structure in room_list:
             #Refloor every room with its floor
             for x in range(structure.x1, structure.x2):

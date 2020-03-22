@@ -5,6 +5,7 @@ from source.entity.drawableEntity import DrawableEntity
 from source.entity.character import Character
 from source.action.action import Action
 from source.entity.player import Player
+from source.grammar.school.blueprint import Rectangle
 
 @pytest.fixture
 def test_area():
@@ -30,3 +31,7 @@ def long_action():
 @pytest.fixture
 def player():
     return Player(0, 1, 1, '@', (255, 255, 255))
+
+@pytest.fixture
+def rectangle():
+    return Rectangle(1, 5, 5, 1, 0)
