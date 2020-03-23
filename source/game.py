@@ -1,6 +1,7 @@
 import tcod
 import tcod.event
 import random
+from typing import Dict
 
 from source.area.area import Area
 from source.handlers.inputHandler import InputHandler
@@ -11,13 +12,14 @@ from source.action.action_queue import ActionQueue
 from source.grammar.school.school_grammar import SchoolGenerator
 
 class Game:
-    def __init__(self):
+    def __init__(self, config:Dict={}):
+        self.config = config
         #setup font
         tcod.console_set_custom_font("arial12x12.png", tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
         tileset = {
-                    0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement'),
+                    0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement', 'blocks_vision'),
                     1: DrawableEntity(-1, -1, -1, '.', (100, 100, 100)),
-                    2: DrawableEntity(-1, -1, -1, '#', (0, 0, 255), 'blocks_movement'),
+                    2: DrawableEntity(-1, -1, -1, '#', (0, 0, 255), 'blocks_movement', 'blocks_vision'),
                     3: DrawableEntity(-1, -1, -1, '.', (0, 0, 255)),
                     }
         self.curr_area:Area = Area(2, 200, 200, tileset)
@@ -38,7 +40,7 @@ class Game:
         self.curr_area.add_object(self.player)
 
     def render(self) -> None:
-        self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.player.vision_radius, **self.config)
         tcod.console_flush()  # Show the console.
 
     def game_loop(self) -> None:
