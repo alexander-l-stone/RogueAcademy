@@ -19,17 +19,11 @@ rule_great_hall_size = GrammarRule("size_hall", [[max(10,GRID_SIZE-4)],[max(15,G
 rule_great_hall = GrammarRule("great_hall", [[1, rule_great_hall_size, rule_great_hall_size, 1, 0]], None, lambda sel: Rectangle.create(sel))
 # great_hall_ref = GrammarVariable('great_hall')
 
-rule_room_size = GrammarRule("size", [[]], None, lambda sel : random.randint(max(3,GRID_SIZE-10),max(8,GRID_SIZE-5)))
-rule_room_floor = GrammarRule("floor", [[1], [3]])
-rule_room_wall = GrammarRule("wall", [[2]])
-# z x y floorTile
-rule_room = GrammarRule("room", [[1, rule_room_size, rule_room_size, rule_room_floor, rule_room_wall]], None, lambda sel: Rectangle.create(sel))
-
 rule_room_type = GrammarRule("room_type", [["bathroom"], ["classroom"], ["storage_room"]])
 
 # options 3, 6, 1
 
-rule_num_rooms = GrammarRule("num_rooms", [[]], None, lambda sel : [rule_room for i in range(0,random.randint(49,51))])
+rule_num_rooms = GrammarRule("num_rooms", [[]], None, lambda sel : [rule_room_type for i in range(0,random.randint(49,51))])
 # print(f"NUM_ROOMS = {GrammarRule.generate(rule_num_rooms)}")
 rule_school = GrammarRule("root", [[rule_great_hall, rule_num_rooms]])
 

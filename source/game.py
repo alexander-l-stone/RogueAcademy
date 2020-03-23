@@ -21,6 +21,8 @@ class Game:
                     1: DrawableEntity(-1, -1, -1, '.', (100, 100, 100)),
                     2: DrawableEntity(-1, -1, -1, '#', (0, 0, 255), 'blocks_movement', 'blocks_vision'),
                     3: DrawableEntity(-1, -1, -1, '.', (0, 0, 255)),
+                    4: DrawableEntity(-1, -1, -1, '#', (223, 220, 218), 'blocks_movement', 'blocks_vision'),
+                    5: DrawableEntity(-1, -1, -1, '.', (223, 220, 218)),
                     }
         self.curr_area:Area = Area(2, 200, 200, tileset)
         self.SCREEN_WIDTH:int = 50
