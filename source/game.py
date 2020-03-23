@@ -37,7 +37,7 @@ class Game:
         self.curr_area.add_object(self.player)
 
     def render(self) -> None:
-        self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.player.vision_radius, self.config)
+        self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.player.vision_radius, **self.config)
         tcod.console_flush()  # Show the console.
 
     def game_loop(self) -> None:

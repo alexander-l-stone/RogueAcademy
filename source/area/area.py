@@ -62,7 +62,7 @@ class Area:
             return False
         
 
-    def draw(self, playerz, playerx, playery, screen_width, screen_height, vision_radius, config:Dict) -> None:
+    def draw(self, playerz, playerx, playery, screen_width, screen_height, vision_radius, **config) -> None:
         corner_x = playerx-screen_width//2
         corner_y = playery-screen_height//2
         #Check Field of view
