@@ -15,7 +15,7 @@ class Game:
     def __init__(self, config:Dict={}):
         self.config = config
         #setup font
-        tcod.console_set_custom_font("arial12x12.png", tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
+        tcod.console_set_custom_font("terminal8x12_gs_ro.png", tcod.FONT_LAYOUT_ASCII_INROW | tcod.FONT_TYPE_GREYSCALE,)
         tileset = {
                     0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement', 'blocks_vision'),
                     1: DrawableEntity(-1, -1, -1, '.', (100, 100, 100)),

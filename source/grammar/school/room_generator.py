@@ -4,6 +4,7 @@ from typing import List,Dict
 from source.grammar.school.blueprint import Rectangle
 from source.grammar.GrammarRule import GrammarRule, GrammarVariable
 from source.structure.room import Room
+from source.entity.drawableEntity import DrawableEntity
 
 GRID_SIZE: int = 20
 
@@ -31,6 +32,7 @@ rule_room_storage_room = GrammarRule('storage_room', [[1, rule_storage_room_size
 
 rule_room_type = GrammarRule("room_type", [["bathroom"], ["classroom"], ["storage_room"]])
 
+# rule_bathroom_entity = GrammarRule("bathroom_entity", [[DrawableEntity(-1, -1, -1, '')]])
 
 class RoomGenerator:
     """
