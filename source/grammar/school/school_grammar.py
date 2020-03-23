@@ -62,7 +62,7 @@ class SchoolGenerator:
             xy_coords.append((random.randrange(elem.x_corner, elem.x_corner + elem.x_length), random.randrange(elem.y_corner, elem.y_corner + elem.y_length), elem.z_length, elem.tiletype))
             for x in range(elem.x_corner, elem.x_corner + elem.x_length):
                 for y in range(elem.y_corner, elem.y_corner + elem.y_length):
-                    print(f"Elem.tiletype: {elem.tiletype}")
+                    #print(f"Elem.tiletype: {elem.tiletype}")
                     area.map[0, x, y] = elem.tiletype
             #Connect all rooms
         while(len(xy_coords) >= 2):

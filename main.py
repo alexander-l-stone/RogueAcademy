@@ -1,9 +1,14 @@
 import tcod
 import tcod.event
+import argparse
 
 from source.game import Game
 if __name__ == "__main__":
-    game = Game()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-d", "--debug", required=False, action='store_true')
+    config = vars(ap.parse_args())
+
+    game = Game(config)
     game.generate_school()
 
     # Initialize the root console in a context.

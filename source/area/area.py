@@ -1,7 +1,7 @@
 import numpy
 import tcod
 
-from typing import List
+from typing import List, Dict
 from source.entity.drawableEntity import DrawableEntity
 
 class Area:
@@ -62,7 +62,7 @@ class Area:
             return False
         
 
-    def draw(self, playerz, playerx, playery, screen_width, screen_height, vision_radius, **kwargs) -> None:
+    def draw(self, playerz, playerx, playery, screen_width, screen_height, vision_radius, config:Dict) -> None:
         corner_x = playerx-screen_width//2
         corner_y = playery-screen_height//2
         #Check Field of view
@@ -75,7 +75,7 @@ class Area:
                 if(drawy < 0 or drawy > self.y_length-1):
                     continue
                 #If an object is there, draw it.
-                if(fov[drawx, drawy]):
+                if(fov[drawx, drawy] or ("debug" in config and config["debug"])):
                     tcod.console_set_default_background(0, tcod.black)
                     #TODO: Make walls hide objects maybe???
                     if self.objdict.get((playerz,drawx,drawy)):
@@ -90,8 +90,8 @@ class Area:
                             tile.z = playerz
                             tile.x = drawx
                             tile.y = drawy
-                            if ("flag" in kwargs and kwargs["flag"] == "debug"):
-                                tile.draw(corner_x, corner_y, override_color=(255, 0, 0))
+                            if (fov[drawx, drawy] and "debug" in config and config["debug"]):
+                                tile.draw(corner_x, corner_y, override_color=(255,0,0))
                             else:
                                 tile.draw(corner_x, corner_y)
                         except IndexError:
@@ -99,23 +99,6 @@ class Area:
                             tcod.console_set_default_foreground(0, tcod.black)
                             tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
                 else:
-                    #TODO: Maybe move the debug code around?
-                    if ("flag" in kwargs and kwargs["flag"] == "debug"):
-                        tcod.console_set_default_background(0, tcod.black)
-                        if self.objdict.get((playerz, drawx, drawy)):
-                            #TODO: Find a better way to pick what to draw
-                            self.objdict[(playerz, drawx, drawy)][-1].draw(corner_x, corner_y)
-                        else:
-                            #Try Catch for drawing stuff outside the area
-                            #TODO: Better handling for stuff not in this structure
-                            try:
-                                #Draw the tile
-                                tile = self.tileset[self.map[playerz][drawx][drawy]]
-                                tile.z = playerz
-                                tile.x = drawx
-                                tile.y = drawy
-                                tile.draw(corner_x, corner_y)
-                            except IndexError:
-                                #Draw blank space if nothing is expected there
-                                tcod.console_set_default_foreground(0, tcod.black)
-                                tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
+                    #Draw blank space if out of fov
+                    tcod.console_set_default_foreground(0, tcod.black)
+                    tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)

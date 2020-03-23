@@ -10,7 +10,7 @@ class DrawableEntity(Entity):
         self.char:str = char
         self.color:tuple = color
     
-    def draw(self, topx, topy, override_color = None) -> None:
+    def draw(self, topx, topy, override_color=None) -> None:
         if(override_color is None):
             tcod.console_set_default_foreground(0, self.color)
         else:
