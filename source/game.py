@@ -9,7 +9,7 @@ from source.entity.drawableEntity import DrawableEntity
 from source.entity.player import Player
 from source.action.action_queue import ActionQueue
 
-from source.grammar.school.school_grammar import SchoolGenerator
+from source.grammar.school.school_generator import SchoolGenerator
 
 class Game:
     def __init__(self, config:Dict={}):

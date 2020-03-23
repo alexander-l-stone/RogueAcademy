@@ -6,19 +6,20 @@ from source.grammar.GrammarRule import GrammarRule, GrammarVariable
 from source.area.area import Area
 from source.grammar.school.blueprint import Rectangle
 from source.structure.room import Room
+import source.grammar.school.room_generator
 
 #Grid Size currently must be at least 17 and divides evenly into both the height and width of the area
-grid_size: int = 20
+GRID_SIZE: int = 20
 
 #TODO: Overhaul great hall generation
 
 #Grammar Library for SchoolGenerator
-rule_great_hall_size = GrammarRule("size_hall", [[max(10,grid_size-4)],[max(15,grid_size-2)]])
+rule_great_hall_size = GrammarRule("size_hall", [[max(10,GRID_SIZE-4)],[max(15,GRID_SIZE-2)]])
 # z x y floorTile
 rule_great_hall = GrammarRule("great_hall", [[1, rule_great_hall_size, rule_great_hall_size, 1, 0]], None, lambda sel: Rectangle.create(sel))
 # great_hall_ref = GrammarVariable('great_hall')
 
-rule_room_size = GrammarRule("size", [[]], None, lambda sel : random.randint(max(3,grid_size-10),max(8,grid_size-5)))
+rule_room_size = GrammarRule("size", [[]], None, lambda sel : random.randint(max(3,GRID_SIZE-10),max(8,GRID_SIZE-5)))
 rule_room_floor = GrammarRule("floor", [[1], [3]])
 rule_room_wall = GrammarRule("wall", [[2]])
 # z x y floorTile
@@ -84,16 +85,16 @@ class SchoolGenerator:
         grid_point:List[tuple] = []
         xy_coords:List[tuple] = []
         prev_elem:Rectangle = None
-        for x in range(0,area.x_length+1, grid_size):
-            for y in range(0,area.y_length+1, grid_size):
+        for x in range(0,area.x_length+1, GRID_SIZE):
+            for y in range(0,area.y_length+1, GRID_SIZE):
                 if(x >= 0 and x < area.x_length and y >= 0 and y < area.y_length):
                     grid_point.append((x, y))
         for elem in rooms:
             #randZ = random.randrange(1 + elem.z_length, area.z_length - 2 - elem.z_length)
             grid_coords = random.choice(grid_point)
             grid_point.remove(grid_coords)
-            elem.x_corner = random.randrange(grid_coords[0]+1, grid_coords[0]+grid_size-elem.x_length)
-            elem.y_corner = random.randrange(grid_coords[1]+1, grid_coords[1]+grid_size-elem.y_length)
+            elem.x_corner = random.randrange(grid_coords[0]+1, grid_coords[0]+GRID_SIZE-elem.x_length)
+            elem.y_corner = random.randrange(grid_coords[1]+1, grid_coords[1]+GRID_SIZE-elem.y_length)
             xy_coords.append((random.randrange(elem.x_corner, elem.x_corner + elem.x_length), random.randrange(elem.y_corner, elem.y_corner + elem.y_length), elem.z_length, elem.floortype))
             #Replace the prexisting tile with the floor_tile of the elem
             for x in range(elem.x_corner, elem.x_corner + elem.x_length):
@@ -126,7 +127,6 @@ class SchoolGenerator:
                         area.map[structure.z, structure.x1-1, y] = structure.wall
                     if(area.tileset[area.map[structure.z, structure.x2, y]].has("blocks_movement")):
                         area.map[structure.z, structure.x2, y] = structure.wall
-            structure.generate_room()
         #Create the FoV map at the end. 
         #TODO: Handle z
         for x in range(0, area.x_length):
