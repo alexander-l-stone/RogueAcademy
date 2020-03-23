@@ -99,6 +99,7 @@ class Area:
                             tcod.console_set_default_foreground(0, tcod.black)
                             tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
                 else:
+                    #TODO: Maybe move the debug code around?
                     if ("flag" in kwargs and kwargs["flag"] == "debug"):
                         tcod.console_set_default_background(0, tcod.black)
                         if self.objdict.get((playerz, drawx, drawy)):
@@ -118,6 +119,3 @@ class Area:
                                 #Draw blank space if nothing is expected there
                                 tcod.console_set_default_foreground(0, tcod.black)
                                 tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
-                    # else:
-                    #     tcod.console_set_default_foreground(0, tcod.black)
-                    #     tcod.console_put_char( 0, drawx, drawy, ' ', tcod.BKGND_NONE)

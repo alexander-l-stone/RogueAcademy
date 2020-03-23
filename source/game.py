@@ -15,7 +15,7 @@ class Game:
         #setup font
         tcod.console_set_custom_font("arial12x12.png", tcod.FONT_LAYOUT_TCOD | tcod.FONT_TYPE_GREYSCALE,)
         tileset = {1: DrawableEntity(-1, -1, -1, '.', (100, 100, 100)),
-                    0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement'),
+                    0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement', 'blocks_vision'),
                     2: DrawableEntity(-1, -1, -1, '.', (0, 0, 255))}
         self.curr_area:Area = Area(2, 100, 100, tileset)
         self.SCREEN_WIDTH:int = 50
@@ -30,12 +30,6 @@ class Game:
             This function will randomly generate the school
         """
         rooms = SchoolGenerator.generate_school(self.curr_area)
-        #Test for weird fov bug
-        for x in range(0, self.curr_area.x_length):
-            for y in range(0, self.curr_area.y_length):
-                if(x % 5 == 1 or y % 5 == 1):
-                    self.curr_area.map[0, x, y] = 2
-                    self.curr_area.fov_map[0,x, y] = 1
         self.player.x = random.randint(rooms[0].x_corner, rooms[0].x_corner + rooms[0].x_length)
         self.player.y = random.randint(rooms[0].y_corner, rooms[0].y_corner + rooms[0].y_length)
         self.curr_area.add_object(self.player)

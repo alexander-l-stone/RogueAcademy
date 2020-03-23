@@ -62,9 +62,8 @@ class SchoolGenerator:
             xy_coords.append((random.randrange(elem.x_corner, elem.x_corner + elem.x_length), random.randrange(elem.y_corner, elem.y_corner + elem.y_length), elem.z_length, elem.tiletype))
             for x in range(elem.x_corner, elem.x_corner + elem.x_length):
                 for y in range(elem.y_corner, elem.y_corner + elem.y_length):
+                    print(f"Elem.tiletype: {elem.tiletype}")
                     area.map[0, x, y] = elem.tiletype
-                    if(not area.tileset[elem.tiletype].has("blocks_vision")):
-                        area.fov_map[0,x,y] = 1
             #Connect all rooms
         while(len(xy_coords) >= 2):
             curr_coords = xy_coords.pop()
@@ -76,4 +75,13 @@ class SchoolGenerator:
                 #Do Y First
                 SchoolGenerator.carve_v_corridor(curr_coords[1], xy_coords[0][1], curr_coords[0], 0, curr_coords[3], area)
                 SchoolGenerator.carve_h_corridor(curr_coords[0], xy_coords[0][0], xy_coords[0][1], 0, curr_coords[3], area)
+        #Create the FoV map at the end. 
+        #TODO: Handle z
+        for x in range(0, area.x_length):
+            for y in range(0, area.y_length):
+                point = area.map[0,x,y]
+                if(not area.tileset[point].has("blocks_vision")):
+                    area.fov_map[0, x, y] = 1
+                else:
+                    area.fov_map[0, x, y] = 0
         return rooms
