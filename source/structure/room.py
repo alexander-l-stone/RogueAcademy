@@ -50,6 +50,9 @@ class Room:
             return False
 
     def contains_rectangle(self, z, x1, x2, y1, y2):
+        """
+        Checks if a given rectangle overlaps me
+        """
         if(z != self.z):
             return False
         if(self.x1 <= x2 and self.x2 >= x1 and self.y1 <= y2 and self.y2 >= y1):
