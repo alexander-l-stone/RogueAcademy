@@ -37,8 +37,8 @@ class Game:
             This function will randomly generate the school
         """
         rooms = SchoolGenerator.generate_school(self.curr_area)
-        self.player.x = random.randint(rooms[0].x_corner, rooms[0].x_corner + rooms[0].x_length)
-        self.player.y = random.randint(rooms[0].y_corner, rooms[0].y_corner + rooms[0].y_length)
+        self.player.x = random.randint(rooms[0].x1+1, rooms[0].x2)
+        self.player.y = random.randint(rooms[0].y1+1, rooms[0].y2)
         self.curr_area.add_object(self.player)
 
     def render(self) -> None:
