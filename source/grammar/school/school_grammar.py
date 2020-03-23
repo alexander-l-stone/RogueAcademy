@@ -13,24 +13,24 @@ grid_size: int = 20
 #TODO: Overhaul great hall generation
 
 #Grammar Library for SchoolGenerator
-rule_great_hall_size = GrammarRule([[max(10,grid_size-4)],[max(15,grid_size-2)]], "size_hall")
+rule_great_hall_size = GrammarRule("size_hall", [[max(10,grid_size-4)],[max(15,grid_size-2)]])
 # z x y floorTile
-rule_great_hall = GrammarRule([[1, rule_great_hall_size, rule_great_hall_size, 1, 0]], "great_hall", None, lambda sel: Rectangle.create(sel))
+rule_great_hall = GrammarRule("great_hall", [[1, rule_great_hall_size, rule_great_hall_size, 1, 0]], None, lambda sel: Rectangle.create(sel))
 # great_hall_ref = GrammarVariable('great_hall')
 
 rule_room_size = GrammarRule([[]], "size", None, lambda sel : random.randint(max(3,grid_size-10),max(8,grid_size-5)))
 rule_room_floor = GrammarRule([[1], [3]], "floor")
 rule_room_wall = GrammarRule([[2]], "wall")
 # z x y floorTile
-rule_room = GrammarRule([[1, rule_room_size, rule_room_size, rule_room_floor, rule_room_wall]], "room", None, lambda sel: Rectangle.create(sel))
+rule_room = GrammarRule("room", [[1, rule_room_size, rule_room_size, rule_room_floor, rule_room_wall]], None, lambda sel: Rectangle.create(sel))
 
-rule_room_type = GrammarRule([["bathroom"], ["classroom"], ["storage_room"]])
+rule_room_type = GrammarRule("room_type", [["bathroom"], ["classroom"], ["storage_room"]])
 
 # options 3, 6, 1
 
-rule_num_rooms = GrammarRule([[]], "num_rooms", None, lambda sel : [rule_room for i in range(0,random.randint(49,51))])
+rule_num_rooms = GrammarRule("num_rooms", [[]], None, lambda sel : [rule_room for i in range(0,random.randint(49,51))])
 # print(f"NUM_ROOMS = {GrammarRule.generate(rule_num_rooms)}")
-rule_school = GrammarRule([[rule_great_hall, rule_num_rooms]], "root")
+rule_school = GrammarRule("root", [[rule_great_hall, rule_num_rooms]])
 
 #TODO: Make this just a generate_school function
 class SchoolGenerator:
