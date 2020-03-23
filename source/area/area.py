@@ -98,7 +98,3 @@ class Area:
                             #Draw blank space if nothing is expected there
                             tcod.console_set_default_foreground(0, tcod.black)
                             tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
-                else:
-                    #Draw blank space if out of fov
-                    tcod.console_set_default_foreground(0, tcod.black)
-                    tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)

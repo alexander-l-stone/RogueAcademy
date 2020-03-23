@@ -6,7 +6,7 @@ class GrammarRule:
 
     # TODO consider adding function hooks to rules for self-population
 
-    def __init__(self, selections:List[List]=[], label:str=None, assignVar:str=None, process:Callable[[list], Any]=None):
+    def __init__(self, label:str=None, selections:List[List]=[], assignVar:str=None, process:Callable[[list], Any]=None):
         """
         Will expand to one of the selection sublists, each element of which will be
         recursively expanded (if rules or variables) and added to the grammar output in-order. A raw value
@@ -186,8 +186,8 @@ class GrammarVisualizer:
                     output = f"{output}[Rule "
                 stack.append(GrammarVisualizer("]"))
                 for sel in elem.selections:
-                    stack.append(GrammarVisualizer(""))
-                    for child in sel:
+                    stack.append(GrammarVisualizer("]"))
+                    for child in sel[::-1]:
                         stack.append(child)
                     stack.append(GrammarVisualizer("[Selection "))
             elif type(elem) is GrammarVariable:
