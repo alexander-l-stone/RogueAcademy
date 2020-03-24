@@ -113,4 +113,10 @@ class SchoolGenerator:
                     area.fov_map[0, x, y] = 1
                 else:
                     area.fov_map[0, x, y] = 0
+                tile_objects = area.get_object(0, x, y)
+                if(tile_objects):
+                    for tile_obj in tile_objects:
+                        if tile_obj.has("blocks_vision"):
+                            area.fov_map[0, x, y] = 0
+                            break
         return room_list
