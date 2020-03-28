@@ -38,7 +38,7 @@ class SchoolGenerator:
             area.fov_map[z, x, y] = 1
 
     @staticmethod
-    def carve_v_corridor(y1: int, y2: int, x: int, z: int, floor_int: int, area: Area):
+    def carve_v_corridor(y1:int, y2:int, x:int, z:int, floor_int: int, area: Area):
         """
         Carve a vertical corridor from z, x, y1 to z, x, y2
         """

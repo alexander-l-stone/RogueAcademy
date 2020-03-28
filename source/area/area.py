@@ -5,7 +5,7 @@ from typing import List, Dict
 from source.entity.drawableEntity import DrawableEntity
 
 class Area:
-    def __init__(self, z_length: int, x_length: int, y_length: int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement')}):
+    def __init__(self, z_length:int, x_length:int, y_length:int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement')}):
         self.x_length:int = x_length
         self.y_length:int = y_length
         if z_length < 1:
@@ -18,6 +18,7 @@ class Area:
         self.map = numpy.array([[[0 for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
         # 0 means occluded, positive means visisble
         self.fov_map = numpy.array([[[0 for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
+        self.explored_map = numpy.array([[[False for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
 
     def compute_fov(self, z, x, y, radius):
         return tcod.map.compute_fov(self.fov_map[z], (x, y), radius=radius, algorithm=tcod.constants.FOV_SHADOW)
@@ -76,6 +77,7 @@ class Area:
                     continue
                 #If an object is there, draw it.
                 if(fov[drawx, drawy] or ("debug" in config and config["debug"])):
+                    self.explored_map[playerz, drawx, drawy] = True
                     tcod.console_set_default_background(0, tcod.black)
                     #TODO: Make walls hide objects maybe???
                     if self.objdict.get((playerz,drawx,drawy)):
@@ -94,6 +96,24 @@ class Area:
                                 tile.draw(corner_x, corner_y, override_color=(255,0,0))
                             else:
                                 tile.draw(corner_x, corner_y)
+                        except IndexError:
+                            #Draw blank space if nothing is expected there
+                            tcod.console_set_default_foreground(0, tcod.black)
+                            tcod.console_put_char(0, drawx, drawy, ' ', tcod.BKGND_NONE)
+                elif(self.explored_map[playerz, drawx, drawy]):
+                    if self.objdict.get((playerz, drawx, drawy)):
+                        #TODO: Find a better way to pick what to draw
+                        self.objdict[(playerz, drawx, drawy)][-1].explored_draw(corner_x, corner_y)
+                    else:
+                        #Try Catch for drawing stuff outside the area
+                        #TODO: Better handling for stuff not in this structure
+                        try:
+                            #Draw the tile
+                            tile = self.tileset[self.map[playerz][drawx][drawy]]
+                            tile.z = playerz
+                            tile.x = drawx
+                            tile.y = drawy
+                            tile.explored_draw(corner_x, corner_y)
                         except IndexError:
                             #Draw blank space if nothing is expected there
                             tcod.console_set_default_foreground(0, tcod.black)
