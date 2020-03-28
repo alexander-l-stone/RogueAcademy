@@ -11,9 +11,19 @@ from source.grammar.school.blueprint import Rectangle
 def test_area():
     area = Area(1, 10, 10)
     area.map[0,2,2] = 1
+    area.fov_map[0, 2, 2] = 1
     area.map[0,1,2] = 1
+    area.fov_map[0, 1, 2] = 1
     area.map[0,1,1] = 1
+    area.fov_map[0, 1, 1] = 1
     area.map[0,2,1] = 1
+    area.fov_map[0, 2, 1] = 1
+    return area
+
+
+@pytest.fixture
+def big_area():
+    area = Area(1, 50, 50)
     return area
 
 @pytest.fixture

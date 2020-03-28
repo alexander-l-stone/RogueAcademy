@@ -15,7 +15,7 @@ class Room:
         self.room_type:str = room_type
         self.floor = blueprint.floortype
         self.wall = blueprint.walltype
-    
+
     def generate_room(self) -> None:
         if self.room_type == 'bathroom':
             center_x:int = (self.x1+self.x2)//2
