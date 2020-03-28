@@ -5,7 +5,7 @@ from typing import List, Dict
 from source.entity.drawableEntity import DrawableEntity
 
 class Area:
-    def __init__(self, z_length: int, x_length: int, y_length: int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement')}):
+    def __init__(self, z_length:int, x_length:int, y_length:int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement')}):
         self.x_length:int = x_length
         self.y_length:int = y_length
         if z_length < 1:

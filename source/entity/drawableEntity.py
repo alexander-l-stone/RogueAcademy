@@ -2,7 +2,7 @@ from source.entity.entity import Entity
 import tcod
 
 class DrawableEntity(Entity):
-    def __init__(self, z: int, x: int, y: int, char: str, color: tuple, *components, **kwargs):
+    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, *components, **kwargs):
         Entity.__init__(self, *components)
         self.x:int = x
         self.y:int = y

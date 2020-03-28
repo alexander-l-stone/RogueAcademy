@@ -23,18 +23,18 @@ class Room:
             new_entity = DrawableEntity(self.z, center_x, center_y, 'b', (0, 255, 0))
             self.area.add_object(new_entity)
         elif self.room_type == 'classroom':
-            center_x: int = (self.x1+self.x2)//2
-            center_y: int = (self.y1+self.y2)//2
+            center_x:int = (self.x1+self.x2)//2
+            center_y:int = (self.y1+self.y2)//2
             new_entity = DrawableEntity(self.z, center_x, center_y, 'c', (0, 255, 0))
             self.area.add_object(new_entity)
         elif self.room_type == 'storage_room':
-            center_x: int = (self.x1+self.x2)//2
-            center_y: int = (self.y1+self.y2)//2
+            center_x:int = (self.x1+self.x2)//2
+            center_y:int = (self.y1+self.y2)//2
             new_entity = DrawableEntity(self.z, center_x, center_y, 's', (0, 255, 0))
             self.area.add_object(new_entity)
         elif self.room_type == 'great_hall':
-            center_x: int = (self.x1+self.x2)//2
-            center_y: int = (self.y1+self.y2)//2
+            center_x:int = (self.x1+self.x2)//2
+            center_y:int = (self.y1+self.y2)//2
             new_entity = DrawableEntity( self.z, center_x, center_y, 'G', (0, 255, 0))
             self.area.add_object(new_entity)
 
