@@ -1,3 +1,5 @@
+from source.entity.component.movetrigger import MoveTrigger
+
 class Moveable:
     def __init__(self, speed:float):
         #TODO: Use speed to add this move to the global action queue
@@ -39,4 +41,9 @@ class Moveable:
         entity.x += dx
         entity.y += dy
         area.add_object(entity)
-
+        # move triggers
+        entity_list = area.objdict.get((entity.z+dz, entity.x+dx, entity.y+dy))
+        if (entity_list):
+            for obj in entity_list:
+                if obj.has(MoveTrigger):
+                    obj.react(entity)
