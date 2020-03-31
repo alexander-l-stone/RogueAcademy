@@ -48,7 +48,9 @@ class Game:
     def render(self) -> None:
         self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.player.vision_radius, **self.config)
         self.bot_ui.draw()
+        self.bot_ui.print_string(1, 1, f"({self.player.z}, {self.player.x}, {self.curr_area.y_length - self.player.y})")
         self.top_ui.draw()
+        self.top_ui.print_string(1, 1, f"{self.global_time}")
         tcod.console_flush()  # Show the console.
 
     def game_loop(self) -> None:
