@@ -8,6 +8,7 @@ from source.handlers.inputHandler import InputHandler
 from source.entity.drawableEntity import DrawableEntity
 from source.entity.player import Player
 from source.action.action_queue import ActionQueue
+from source.ui.ui_panel import UIPanel
 
 from source.grammar.school.school_generator import SchoolGenerator
 
@@ -31,6 +32,9 @@ class Game:
         self.player:Player = Player(0, 24, 24, '@', (255, 255, 255))
         self.global_queue = ActionQueue()
         self.global_time = 0
+        #TODO: Figure out panel heights for this
+        self.bot_ui = UIPanel(0, self.SCREEN_HEIGHT - 5, 5, self.SCREEN_WIDTH)
+        self.top_ui = UIPanel(0, 0, 5, self.SCREEN_WIDTH)
     
     def generate_school(self) -> None:
         """
@@ -43,6 +47,10 @@ class Game:
 
     def render(self) -> None:
         self.curr_area.draw(self.player.z, self.player.x,self.player.y, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.player.vision_radius, **self.config)
+        self.bot_ui.draw()
+        self.bot_ui.print_string(1, 1, f"({self.player.z}, {self.player.x}, {self.curr_area.y_length - self.player.y})")
+        self.top_ui.draw()
+        self.top_ui.print_string(1, 1, f"{self.global_time}")
         tcod.console_flush()  # Show the console.
 
     def game_loop(self) -> None:
