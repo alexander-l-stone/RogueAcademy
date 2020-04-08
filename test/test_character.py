@@ -1,14 +1,9 @@
 from source.entity.character import Character
-from source.entity.component.moveable import Moveable
 
 def test_can_instantiate_character():
     assert Character
     character = Character(0, 1, 1, '@', (255, 255, 255))
     assert isinstance(character, Character)
-
-def test_character_has_moveable():
-    character = Character(0, 1, 1, '@', (255, 255, 255))
-    assert character.has(Moveable) is True
 
 #TODO: Rework movement tests to work with action queue
 

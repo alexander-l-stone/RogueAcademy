@@ -5,7 +5,7 @@ from typing import Dict
 
 from source.area.area import Area
 from source.handlers.inputHandler import InputHandler
-from source.entity.drawableEntity import DrawableEntity
+from source.entity.entity import Entity
 from source.entity.player import Player
 from source.action.action_queue import ActionQueue
 from source.ui.ui_panel import UIPanel
@@ -18,12 +18,12 @@ class Game:
         #setup font
         tcod.console_set_custom_font("terminal8x12_gs_ro.png", tcod.FONT_LAYOUT_ASCII_INROW | tcod.FONT_TYPE_GREYSCALE,)
         tileset = {
-                    0: DrawableEntity(-1, -1, -1, '#', (100, 100, 100), 'blocks_movement', 'blocks_vision'),
-                    1: DrawableEntity(-1, -1, -1, '.', (100, 100, 100)),
-                    2: DrawableEntity(-1, -1, -1, '#', (0, 0, 255), 'blocks_movement', 'blocks_vision'),
-                    3: DrawableEntity(-1, -1, -1, '.', (0, 0, 255)),
-                    4: DrawableEntity(-1, -1, -1, '#', (180, 180, 180), 'blocks_movement', 'blocks_vision'),
-                    5: DrawableEntity(-1, -1, -1, '.', (180, 180, 180)),
+                    0: Entity(-1, -1, -1, '#', (100, 100, 100), flags={'blocks_movement':True, 'blocks_vision':True}),
+                    1: Entity(-1, -1, -1, '.', (100, 100, 100)),
+                    2: Entity(-1, -1, -1, '#', (0, 0, 255), flags={'blocks_movement': True, 'blocks_vision': True}),
+                    3: Entity(-1, -1, -1, '.', (0, 0, 255)),
+                    4: Entity(-1, -1, -1, '#', (180, 180, 180), flags={'blocks_movement': True, 'blocks_vision': True}),
+                    5: Entity(-1, -1, -1, '.', (180, 180, 180)),
                     }
         self.curr_area:Area = Area(2, 200, 200, tileset)
         self.SCREEN_WIDTH:int = 50

@@ -1,25 +1,56 @@
-from source.entity.drawableEntity import DrawableEntity
-from source.entity.component.moveable import Moveable
+from source.entity.entity import Entity
 from source.action.move_action import MoveAction
 
-class Character(DrawableEntity):
-    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, *components):
-        moveable:Moveable = Moveable(1)
+class Character(Entity):
+    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict={}, **kwargs:dict):
         #TODO:Calculate vision_radius somehow
-        self.vision_radius = 12
-        DrawableEntity.__init__(self, z, x, y, char, color, moveable, 'blocks_movement', *components)
+        self.vision_radius:int = 12
+        Entity.__init__(self, z, x, y, char, color)
+        self.flags['blocks_movement'] = True
     
     def can_move(self, dz:int, dx:int, dy:int, area):
         """
         Check if a character can move somewhere
         """
-        return self.get(Moveable).can_move(self, area, dz, dx, dy)
+        entity_list = area.objdict.get((self.z+dz, self.x+dx, self.y+dy))
+        if (entity_list):
+            for obj in entity_list:
+                if 'blocks_movement' in obj.flags:
+                    return False
+            return True
+        else:
+            try:
+                z_attempt = self.z + dz
+                if (z_attempt < 0) or (z_attempt > area.z_length - 1):
+                    print('Z out of Map')
+                    return False
+                x_attempt = self.x + dx
+                if (x_attempt < 0) or (x_attempt > area.x_length - 1):
+                    print('X out of Map')
+                    return False
+                y_attempt = self.y + dy
+                if(y_attempt < 0) or (y_attempt > area.y_length - 1):
+                    print('Y out of Map')
+                    return False
+                if ('blocks_movement' in area.tileset[area.map[z_attempt, x_attempt, y_attempt]].flags):
+                    print(f"Tile num:{area.map[z_attempt, x_attempt, y_attempt]}")
+                    print(f"Tile flags: {area.tileset[area.map[z_attempt, x_attempt, y_attempt]].flags}")
+                    print('Movement blocked')
+                    return False
+                else:
+                    return True
+            except IndexError:
+                return False
     
     def move(self, dz:int, dx:int, dy:int, area):
         """
         Makes a character move
         """
-        return self.get(Moveable).move(self, area, dz, dx, dy)
+        area.remove_object(self)
+        self.z += dz
+        self.x += dx
+        self.y += dy
+        area.add_object(self)
 
     #TODO: Rename this to something better
     def move_action(self, dz:int, dx:int, dy:int, area, queue):

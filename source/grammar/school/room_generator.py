@@ -5,7 +5,7 @@ import copy
 from source.grammar.school.blueprint import Rectangle
 from source.grammar.GrammarRule import GrammarRule, GrammarVariable
 from source.structure.room import Room
-from source.entity.drawableEntity import DrawableEntity
+from source.entity.entity import Entity
 
 GRID_SIZE: int = 20
 
@@ -34,15 +34,15 @@ rule_room_storage_room = GrammarRule('storage_room', [[1, rule_storage_room_size
 rule_room_type = GrammarRule("room_type", [["bathroom"], ["classroom"], ["storage_room"]])
 
 rule_bathroom_entity = GrammarRule("bathroom_entity", [
-    [DrawableEntity(-1, -1, -1, chr(129), (240, 240, 240), 'blocks_movement')],
-    [DrawableEntity(-1, -1, -1, '%', (200, 200, 240), 'blocks_movement')]])
+    [Entity(-1, -1, -1, chr(129), (240, 240, 240), flags={'blocks_movement':True})],
+    [Entity(-1, -1, -1, '%', (200, 200, 240), flags={'blocks_movement': True})]])
 
 rule_classroom_entity = GrammarRule("classroom_entity", [
-    [DrawableEntity(-1, -1, -1, chr(254), (210, 180, 150), 'blocks_movement')]])
+    [Entity(-1, -1, -1, chr(254), (210, 180, 150), flags={'blocks_movement': True})]])
 
 rule_storage_room_entity = GrammarRule("storage_room_entity", [
-    [DrawableEntity(-1, -1, -1, chr(4), (193, 154, 107), 'blocks_vision')],
-    [DrawableEntity(-1, -1, -1, chr(7), (193, 154, 107), 'blocks_vision')]])
+    [Entity(-1, -1, -1, chr(4), (193, 154, 107), flags={'blocks_movement': True})],
+    [Entity(-1, -1, -1, chr(7), (193, 154, 107), flags={'blocks_movement': True})]])
 
 class RoomGenerator:
     """
@@ -77,7 +77,7 @@ class RoomGenerator:
                 area.map[0, x, y] = blueprint.floortype
         if room_type == 'bathroom':
             for i in range(0, num_entities+1):
-                new_entity:DrawableEntity = copy.deepcopy(GrammarRule.generate(rule_bathroom_entity)[0])
+                new_entity:Entity = copy.deepcopy(GrammarRule.generate(rule_bathroom_entity)[0])
                 x = random.randrange(max(1,x_corner+1), min(area.x_length-1,x_corner+blueprint.x_length))
                 y = random.randrange(max(1, y_corner+1), min(area.y_length-1, y_corner+blueprint.y_length))
                 new_entity.z = z
@@ -86,7 +86,7 @@ class RoomGenerator:
                 area.add_object(new_entity)
         elif room_type == 'classroom':
             for i in range(0, num_entities+1):
-                new_entity: DrawableEntity = copy.deepcopy(GrammarRule.generate(rule_classroom_entity)[0])
+                new_entity: Entity = copy.deepcopy(GrammarRule.generate(rule_classroom_entity)[0])
                 x = random.randrange(max(1, x_corner+1), min(area.x_length-1, x_corner+blueprint.x_length))
                 y = random.randrange(max(1, y_corner+1), min(area.y_length-1, y_corner+blueprint.y_length))
                 new_entity.z = z
@@ -95,7 +95,7 @@ class RoomGenerator:
                 area.add_object(new_entity)
         elif room_type == 'storage_room':
             for i in range(0, num_entities+1):
-                new_entity:DrawableEntity = copy.deepcopy(GrammarRule.generate(rule_storage_room_entity)[0])
+                new_entity:Entity = copy.deepcopy(GrammarRule.generate(rule_storage_room_entity)[0])
                 x = random.randrange(max(1, x_corner+1), min(area.x_length-1, x_corner+blueprint.x_length))
                 y = random.randrange(max(1, y_corner+1), min(area.y_length-1, y_corner+blueprint.y_length))
                 new_entity.z = z
