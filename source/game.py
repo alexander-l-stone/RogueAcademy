@@ -25,7 +25,7 @@ class Game:
                     4: Entity(-1, -1, -1, '#', (180, 180, 180), flags={'blocks_movement': True, 'blocks_vision': True}),
                     5: Entity(-1, -1, -1, '.', (180, 180, 180)),
                     }
-        self.curr_area:Area = Area(2, 200, 200, tileset)
+        self.curr_area:Area = Area(2, 200, 200, tileset=tileset)
         self.SCREEN_WIDTH:int = 50
         self.SCREEN_HEIGHT:int = 50
         self.InputHandler:InputHandler = InputHandler()
