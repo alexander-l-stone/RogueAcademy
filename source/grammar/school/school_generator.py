@@ -94,29 +94,29 @@ class SchoolGenerator:
             #Refloor every room with its floor and add the walls
             #TODO: Fix the corners not getting walls
             for x in range(structure.x1, structure.x2):
-                if(structure.y1 - 1 > 0 and area.tileset[area.map[structure.z, x, structure.y1 - 1]].has("blocks_movement")):
+                if(structure.y1 - 1 > 0 and "blocks_movement" in area.tileset[area.map[structure.z, x, structure.y1 - 1]].flags):
                     area.map[structure.z, x, structure.y1 - 1] = structure.wall
-                if(area.tileset[area.map[structure.z, x, structure.y2]].has("blocks_movement")):
+                if("blocks_movement" in area.tileset[area.map[structure.z, x, structure.y2]].flags):
                     area.map[structure.z, x, structure.y2] = structure.wall
                 for y in range(structure.y1, structure.y2):
                     area.map[structure.z, x, y] = structure.floor
-                    if(structure.x1 - 1 > 0 and area.tileset[area.map[structure.z, structure.x1 - 1, y]].has("blocks_movement")):
+                    if(structure.x1 - 1 > 0 and "blocks_movement" in area.tileset[area.map[structure.z, structure.x1 - 1, y]].flags):
                         area.map[structure.z, structure.x1-1, y] = structure.wall
-                    if(area.tileset[area.map[structure.z, structure.x2, y]].has("blocks_movement")):
+                    if("blocks_movement" in area.tileset[area.map[structure.z, structure.x2, y]].flags):
                         area.map[structure.z, structure.x2, y] = structure.wall
         #Create the FoV map at the end. 
         #TODO: Handle z
         for x in range(0, area.x_length):
             for y in range(0, area.y_length):
                 point = area.map[0,x,y]
-                if(not area.tileset[point].has("blocks_vision")):
+                if(not "blocks_vision" in area.tileset[point].flags):
                     area.fov_map[0, x, y] = 1
                 else:
                     area.fov_map[0, x, y] = 0
                 tile_objects = area.get_object(0, x, y)
                 if(tile_objects):
                     for tile_obj in tile_objects:
-                        if tile_obj.has("blocks_vision"):
+                        if "blocks_vision" in tile_obj.flags:
                             area.fov_map[0, x, y] = 0
                             break
         return room_list

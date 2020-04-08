@@ -1,7 +1,7 @@
 import pytest
 
 from source.area.area import Area
-from source.entity.drawableEntity import DrawableEntity
+from source.entity.entity import Entity
 from source.entity.character import Character
 from source.action.action import Action
 from source.entity.player import Player
@@ -28,7 +28,7 @@ def big_area():
 
 @pytest.fixture
 def test_entity():
-    return DrawableEntity(0, 1, 1, 't', (255, 255, 255))
+    return Entity(0, 1, 1, 't', (255, 255, 255), {})
 
 @pytest.fixture
 def action():
@@ -40,7 +40,7 @@ def long_action():
 
 @pytest.fixture
 def player():
-    return Player(0, 1, 1, '@', (255, 255, 255))
+    return Player(0, 1, 1, '@', (255, 255, 255), {})
 
 @pytest.fixture
 def rectangle():

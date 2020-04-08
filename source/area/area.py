@@ -2,10 +2,14 @@ import numpy
 import tcod
 
 from typing import List, Dict
-from source.entity.drawableEntity import DrawableEntity
+from source.entity.entity import Entity
 
+default_tileset = {
+                    0: Entity(-1, -1, -1, '#', (100, 100, 100), {'blocks_movement': True}),
+                    1: Entity(-1, -1, -1, '.', (100, 100, 100)),
+                    }
 class Area:
-    def __init__(self, z_length:int, x_length:int, y_length:int, tileset:dict = {1: DrawableEntity(-1, -1, -1, '.', (100,100,100)), 0: DrawableEntity(-1, -1, -1, '#', (100,100,100), 'blocks_movement')}):
+    def __init__(self, z_length:int, x_length:int, y_length:int, tileset:dict = default_tileset):
         self.x_length:int = x_length
         self.y_length:int = y_length
         if z_length < 1:
@@ -23,11 +27,11 @@ class Area:
     def compute_fov(self, z, x, y, radius):
         return tcod.map.compute_fov(self.fov_map[z], (x, y), radius=radius, algorithm=tcod.constants.FOV_SHADOW)
 
-    def add_object(self, entity:DrawableEntity) -> None:
+    def add_object(self, entity:Entity) -> None:
         """
         Adds an entity to a square.
         """
-        if(entity.has("blocks_vision")):
+        if("blocks_vision" in entity.flags):
             self.fov_map[entity.z, entity.x, entity.y] = 0
 
         if (self.objdict.get((entity.z, entity.x, entity.y))):
@@ -35,13 +39,13 @@ class Area:
         else:
             self.objdict[(entity.z, entity.x, entity.y)] = [entity]
     
-    def get_object(self, z:int, x:int, y:int) -> List[DrawableEntity]:
+    def get_object(self, z:int, x:int, y:int) -> List[Entity]:
         """
         Gets the list of entities at the given coordinates
         """
         return self.objdict.get((z, x, y))
     
-    def remove_object(self,entity:DrawableEntity) -> bool:
+    def remove_object(self,entity:Entity) -> bool:
         """
         Removes an entity from objdict
 
@@ -50,10 +54,10 @@ class Area:
         entity_list = self.objdict.get((entity.z, entity.x, entity.y))
         if (entity in entity_list):
             entity_list.remove(entity)
-            if(entity.has("blocks_vision")):
+            if("blocks_vision" in entity.flags):
                 self.fov_map[entity.z, entity.x, entity.y] = 1
                 for thing in entity_list:
-                    if thing.has("blocks_vision"):
+                    if "blocks_vision" in thing.flags:
                         self.fov_map[entity.z, entity.x, entity.y] = 0
                         break
             if len(entity_list) == 0:

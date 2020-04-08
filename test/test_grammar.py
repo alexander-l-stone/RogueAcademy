@@ -91,8 +91,8 @@ def test_use_variable_multi_retains_identity():
         Ensure that the populated variable is not the object in the rule tree.
             (rules should be immutable)
     """
-    entity = Entity()
-    entity2 = Entity()
+    entity = Entity(0,0,0, '.', (0,0,0))
+    entity2 = Entity(0,0,0, '.', (0,0,0))
     assert entity is not entity2
     rule_assign = GrammarRule("label_assign", [[entity]], "var1")
     var_1 = GrammarVariable("var1")
@@ -107,8 +107,8 @@ def test_clone_variable_unique():
         Clone flag on a GrammarVariable should cause the reference population to be cloned.
         Clones should be pointer-unique to all other populations of that value.
     """
-    entity = Entity()
-    entity2 = Entity()
+    entity = Entity(0,0,0, '.', (0,0,0))
+    entity2 = Entity(0,0,0, '.', (0,0,0))
     assert entity is not entity2
     rule_assign = GrammarRule("label_assign", [[entity]], "var1")
     var_1 = GrammarVariable("var1")
