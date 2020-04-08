@@ -2,9 +2,11 @@ from source.entity.entity import Entity
 from source.action.move_action import MoveAction
 
 class Character(Entity):
-    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict={}, **kwargs:dict):
+    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict=None, **kwargs:dict):
         #TODO:Calculate vision_radius somehow
         self.vision_radius:int = 12
+        if flags == None:
+            self.flags = {}
         Entity.__init__(self, z, x, y, char, color, flags)
         self.flags['blocks_movement'] = True
     

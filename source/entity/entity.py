@@ -1,13 +1,16 @@
 import tcod
 
 class Entity:
-    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict, **kwargs):
+    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict=None, **kwargs):
         self.x:int = x
         self.y:int = y
         self.z:int = z
         self.char:str = char
         self.color:tuple = color
-        self.flags = flags
+        if flags == None:
+            self.flags = {}
+        else:
+            self.flags = flags
         if('explored_color' not in kwargs):
             self.explored_color = (max(30, color[0]-80), max(30, color[1]-80), max(30, color[2]-80))
         else:

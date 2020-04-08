@@ -6,7 +6,7 @@ from source.entity.entity import Entity
 
 default_tileset = {
                     0: Entity(-1, -1, -1, '#', (100, 100, 100), {'blocks_movement': True}),
-                    1: Entity(-1, -1, -1, '.', (100, 100, 100), {}),
+                    1: Entity(-1, -1, -1, '.', (100, 100, 100)),
                     }
 class Area:
     def __init__(self, z_length:int, x_length:int, y_length:int, tileset:dict = default_tileset):
