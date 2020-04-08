@@ -34,15 +34,15 @@ rule_room_storage_room = GrammarRule('storage_room', [[1, rule_storage_room_size
 rule_room_type = GrammarRule("room_type", [["bathroom"], ["classroom"], ["storage_room"]])
 
 rule_bathroom_entity = GrammarRule("bathroom_entity", [
-    [Entity(-1, -1, -1, chr(129), (240, 240, 240), flags={'blocks_movement':True})],
-    [Entity(-1, -1, -1, '%', (200, 200, 240), flags={'blocks_movement': True})]])
+    [Entity(-1, -1, -1, chr(129), (240, 240, 240), {'blocks_movement':True})],
+    [Entity(-1, -1, -1, '%', (200, 200, 240), {'blocks_movement': True})]])
 
 rule_classroom_entity = GrammarRule("classroom_entity", [
-    [Entity(-1, -1, -1, chr(254), (210, 180, 150), flags={'blocks_movement': True})]])
+    [Entity(-1, -1, -1, chr(254), (210, 180, 150), {'blocks_movement': True})]])
 
 rule_storage_room_entity = GrammarRule("storage_room_entity", [
-    [Entity(-1, -1, -1, chr(4), (193, 154, 107), flags={'blocks_movement': True})],
-    [Entity(-1, -1, -1, chr(7), (193, 154, 107), flags={'blocks_movement': True})]])
+    [Entity(-1, -1, -1, chr(4), (193, 154, 107), {'blocks_vision': True})],
+    [Entity(-1, -1, -1, chr(7), (193, 154, 107), {'blocks_vision': True})]])
 
 class RoomGenerator:
     """

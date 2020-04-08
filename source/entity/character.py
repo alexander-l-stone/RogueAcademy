@@ -5,7 +5,7 @@ class Character(Entity):
     def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict={}, **kwargs:dict):
         #TODO:Calculate vision_radius somehow
         self.vision_radius:int = 12
-        Entity.__init__(self, z, x, y, char, color)
+        Entity.__init__(self, z, x, y, char, color, flags)
         self.flags['blocks_movement'] = True
     
     def can_move(self, dz:int, dx:int, dy:int, area):
@@ -22,20 +22,14 @@ class Character(Entity):
             try:
                 z_attempt = self.z + dz
                 if (z_attempt < 0) or (z_attempt > area.z_length - 1):
-                    print('Z out of Map')
                     return False
                 x_attempt = self.x + dx
                 if (x_attempt < 0) or (x_attempt > area.x_length - 1):
-                    print('X out of Map')
                     return False
                 y_attempt = self.y + dy
                 if(y_attempt < 0) or (y_attempt > area.y_length - 1):
-                    print('Y out of Map')
                     return False
                 if ('blocks_movement' in area.tileset[area.map[z_attempt, x_attempt, y_attempt]].flags):
-                    print(f"Tile num:{area.map[z_attempt, x_attempt, y_attempt]}")
-                    print(f"Tile flags: {area.tileset[area.map[z_attempt, x_attempt, y_attempt]].flags}")
-                    print('Movement blocked')
                     return False
                 else:
                     return True

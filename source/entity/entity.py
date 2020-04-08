@@ -1,7 +1,7 @@
 import tcod
 
 class Entity:
-    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict={}, **kwargs):
+    def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict, **kwargs):
         self.x:int = x
         self.y:int = y
         self.z:int = z
