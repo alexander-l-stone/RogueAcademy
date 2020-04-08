@@ -19,11 +19,11 @@ class Game:
         tcod.console_set_custom_font("terminal8x12_gs_ro.png", tcod.FONT_LAYOUT_ASCII_INROW | tcod.FONT_TYPE_GREYSCALE,)
         tileset = {
                     0: Entity(-1, -1, -1, '#', (100, 100, 100), flags={'blocks_movement':True, 'blocks_vision':True}),
-                    1: Entity(-1, -1, -1, '.', (100, 100, 100)),
+                    1: Entity(-1, -1, -1, '.', (100, 100, 100), {}),
                     2: Entity(-1, -1, -1, '#', (0, 0, 255), flags={'blocks_movement': True, 'blocks_vision': True}),
-                    3: Entity(-1, -1, -1, '.', (0, 0, 255)),
+                    3: Entity(-1, -1, -1, '.', (0, 0, 255), {}),
                     4: Entity(-1, -1, -1, '#', (180, 180, 180), flags={'blocks_movement': True, 'blocks_vision': True}),
-                    5: Entity(-1, -1, -1, '.', (180, 180, 180)),
+                    5: Entity(-1, -1, -1, '.', (180, 180, 180), {}),
                     }
         self.curr_area:Area = Area(2, 200, 200, tileset=tileset)
         self.SCREEN_WIDTH:int = 50
