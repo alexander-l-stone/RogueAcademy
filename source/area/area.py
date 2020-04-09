@@ -23,6 +23,7 @@ class Area:
         # 0 means occluded, positive means visisble
         self.fov_map = numpy.array([[[0 for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
         self.explored_map = numpy.array([[[False for y in range(self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
+        self.mana_map = numpy.array([[[{'water': 0, 'fire': 0, 'earth': 0, 'air': 0, 'dream': 0} for y in range (self.y_length)] for x in range(self.x_length)] for z in range(self.z_length)])
 
     def compute_fov(self, z, x, y, radius):
         return tcod.map.compute_fov(self.fov_map[z], (x, y), radius=radius, algorithm=tcod.constants.FOV_SHADOW)

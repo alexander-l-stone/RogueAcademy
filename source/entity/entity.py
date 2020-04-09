@@ -1,6 +1,20 @@
 import tcod
 
 class Entity:
+    """
+    Basic game entity class that stores a drawable character on the map.
+
+    Flags:
+
+    blocks_movement: Boolean for if this is a wall or not.
+    blocks_vision: Boolean for if this blocks vision or not
+
+    water_mana_prod: Int for how much water mana is produced by this Entity.
+    fire_mana_prod: Int for how much fire mana is produced by this Entity.
+    earth_mana_prod: Int for how much earth mana is produced by this Entity.
+    air_mana_prod: Int for how much air mana is produced by this Entity.
+    dream_mana_prod: Int for how much dream mana is produced by this Entity.
+    """
     def __init__(self, z:int, x:int, y:int, char:str, color:tuple, flags:dict=None, **kwargs):
         self.x:int = x
         self.y:int = y
